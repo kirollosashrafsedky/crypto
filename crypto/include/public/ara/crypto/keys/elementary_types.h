@@ -11,7 +11,7 @@ namespace ara
         {
             using TransactionId = std::uint64_t;
 
-            using TransactionScope = ara::core::Vector<KeySlot>;
+            using TransactionScope = core::Vector<KeySlot>;
         }
     }
 }
