@@ -1,24 +1,26 @@
 #ifndef _CRYPTO_PROVIDER_H_
 #define _CRYPTO_PROVIDER_H_
 
-#include "ara/crypto/cryp/cryobj/crypto_primitive_id.h"
-#include "ara/crypto/common/mem_region.h"
-#include "ara/crypto/cryp/cryobj/restricted_use_object.h"
-#include "ara/crypto/cryp/cryobj/symmetric_key.h"
-#include "ara/crypto/cryp/cryobj/secret_seed.h"
-#include "ara/crypto/cryp/cryobj/signature.h"
-#include "ara/crypto/cryp/cryobj/public_key.h"
-#include "ara/crypto/cryp/cryobj/private_key.h"
-#include "ara/crypto/cryp/hash_function_ctx.h"
-#include "ara/crypto/common/volatile_trusted_container.h"
-#include "ara/crypto/common/serializable.h"
-#include "ara/crypto/cryp/symmetric_key_wrapper_ctx.h"
-#include "ara/crypto/cryp/symmetric_block_cipher_ctx.h"
-#include "ara/core/result.h"
-#include "ara/core/string_view.h"
 #include "ara/core/string.h"
-#include "ara/core/vector.h"
-#include "ara/core/utility.h"
+#include "ara/crypto/common/serializable.h"
+#include "ara/crypto/common/volatile_trusted_container.h"
+#include "ara/crypto/cryp/auth_cipher_ctx.h"
+#include "ara/crypto/cryp/decryptor_private_ctx.h"
+#include "ara/crypto/cryp/encryptor_public_ctx.h"
+#include "ara/crypto/cryp/hash_function_ctx.h"
+#include "ara/crypto/cryp/key_agreement_private_ctx.h"
+#include "ara/crypto/cryp/key_decapsulator_private_ctx.h"
+#include "ara/crypto/cryp/key_derivation_function_ctx.h"
+#include "ara/crypto/cryp/key_encapsulator_public_ctx.h"
+#include "ara/crypto/cryp/message_authn_code_ctx.h"
+#include "ara/crypto/cryp/msg_recovery_public_ctx.h"
+#include "ara/crypto/cryp/random_generator_ctx.h"
+#include "ara/crypto/cryp/signer_private_ctx.h"
+#include "ara/crypto/cryp/sig_encode_private_ctx.h"
+#include "ara/crypto/cryp/stream_cipher_ctx.h"
+#include "ara/crypto/cryp/symmetric_block_cipher_ctx.h"
+#include "ara/crypto/cryp/symmetric_key_wrapper_ctx.h"
+#include "ara/crypto/cryp/verifier_public_ctx.h"
 
 namespace ara
 {
@@ -41,45 +43,43 @@ namespace ara
 
                 virtual core::Result<core::String> ConvertToAlgName(AlgId algId) const noexcept = 0;
 
-                // virtual core::Result<AuthCipherCtx::Uptr> CreateAuthCipherCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<AuthCipherCtx::Uptr> CreateAuthCipherCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<DecryptorPrivateCtx::Uptr> CreateDecryptorPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<DecryptorPrivateCtx::Uptr> CreateDecryptorPrivateCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<EncryptorPublicCtx::Uptr> CreateEncryptorPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<EncryptorPublicCtx::Uptr> CreateEncryptorPublicCtx(AlgId algId) noexcept = 0;
 
                 virtual core::Result<Signature::Uptrc> CreateHashDigest(AlgId hashAlgId, ReadOnlyMemRegion value) noexcept = 0;
 
                 virtual core::Result<HashFunctionCtx::Uptr> CreateHashFunctionCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<KeyAgreementPrivateCtx::Uptr> CreateKeyAgreementPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyAgreementPrivateCtx::Uptr> CreateKeyAgreementPrivateCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<KeyDecapsulatorPrivateCtx::Uptr> CreateKeyDecapsulatorPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyDecapsulatorPrivateCtx::Uptr> CreateKeyDecapsulatorPrivateCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<KeyDerivationFunctionCtx::Uptr> CreateKeyDerivationFunctionCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyDerivationFunctionCtx::Uptr> CreateKeyDerivationFunctionCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<KeyEncapsulatorPublicCtx::Uptr> CreateKeyEncapsulatorPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyEncapsulatorPublicCtx::Uptr> CreateKeyEncapsulatorPublicCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<MessageAuthnCodeCtx::Uptr> CreateMessageAuthnCodeCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<MessageAuthnCodeCtx::Uptr> CreateMessageAuthnCodeCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<MsgRecoveryPublicCtx::Uptr> CreateMsgRecoveryPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<MsgRecoveryPublicCtx::Uptr> CreateMsgRecoveryPublicCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<RandomGeneratorCtx::Uptr> CreateRandomGeneratorCtx(AlgId algId = kAlgIdDefault, bool initialize = true) noexcept = 0;
+                virtual core::Result<RandomGeneratorCtx::Uptr> CreateRandomGeneratorCtx(AlgId algId = kAlgIdDefault, bool initialize = true) noexcept = 0;
 
-                // virtual core::Result<SigEncodePrivateCtx::Uptr> CreateSigEncodePrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<SigEncodePrivateCtx::Uptr> CreateSigEncodePrivateCtx(AlgId algId) noexcept = 0;
 
                 virtual core::Result<Signature::Uptrc> CreateSignature(AlgId signAlgId, ReadOnlyMemRegion value, const RestrictedUseObject &key, AlgId hashAlgId = kAlgIdNone) noexcept = 0;
 
-                // virtual core::Result<SignerPrivateCtx::Uptr> CreateSignerPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<SignerPrivateCtx::Uptr> CreateSignerPrivateCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<StreamCipherCtx::Uptr> CreateStreamCipherCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<StreamCipherCtx::Uptr> CreateStreamCipherCtx(AlgId algId) noexcept = 0;
 
                 virtual core::Result<SymmetricBlockCipherCtx::Uptr> CreateSymmetricBlockCipherCtx(AlgId algId) noexcept = 0;
 
                 virtual core::Result<SymmetricKeyWrapperCtx::Uptr> CreateSymmetricKeyWrapperCtx(AlgId algId) noexcept = 0;
 
-                // virtual core::Result<VerifierPublicCtx::Uptr> CreateVerifierPublicCtx(AlgId algId) noexcept = 0;
-
-                virtual ~CryptoProvider() noexcept = default;
+                virtual core::Result<VerifierPublicCtx::Uptr> CreateVerifierPublicCtx(AlgId algId) noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> ExportPublicObject(const IOInterface &container, Serializable::FormatId formatId = Serializable::kFormatDefault) noexcept = 0;
 
@@ -114,6 +114,8 @@ namespace ara
                 CryptoProvider &operator=(const CryptoProvider &other) = default;
 
                 CryptoProvider &operator=(CryptoProvider &&other) = default;
+
+                virtual ~CryptoProvider() noexcept = default;
             };
         }
     }
