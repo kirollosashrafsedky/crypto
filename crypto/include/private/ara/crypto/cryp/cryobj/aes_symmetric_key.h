@@ -2,6 +2,8 @@
 #define _AES_SYMMETRIC_KEY_H_
 
 #include "ara/crypto/cryp/cryobj/symmetric_key.h"
+#include "ara/crypto/cryp/cryobj/aes_key_primitive_id.h"
+#include <cryptopp/aes.h>
 
 namespace ara
 {
@@ -14,21 +16,42 @@ namespace ara
                 class AesSymmetricKey : public SymmetricKey
                 {
                 public:
-                    Usage GetAllowedUsage() const noexcept;
+                    using Uptrc = std::unique_ptr<const AesSymmetricKey>;
 
-                    CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept;
+                    using Uptr = std::unique_ptr<AesSymmetricKey>;
 
-                    COIdentifier GetObjectId() const noexcept;
+                    AesSymmetricKey(COIdentifier identifier, CryptoPP::SecByteBlock keyData, AllowedUsageFlags allowedUsageFlags = 0, bool isSession = false, bool isExportable = false);
 
-                    std::size_t GetPayloadSize() const noexcept;
+                    Usage GetAllowedUsage() const noexcept override;
 
-                    COIdentifier HasDependence() const noexcept;
+                    CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept override;
 
-                    bool IsExportable() const noexcept;
+                    COIdentifier GetObjectId() const noexcept override;
 
-                    bool IsSession() const noexcept;
+                    std::size_t GetPayloadSize() const noexcept override;
 
-                    core::Result<void> Save(IOInterface &container) const noexcept;
+                    COIdentifier HasDependence() const noexcept override;
+
+                    bool IsExportable() const noexcept override;
+
+                    bool IsSession() const noexcept override;
+
+                    core::Result<void> Save(IOInterface &container) const noexcept override;
+
+                    const CryptoPP::SecByteBlock &getKeyData() const;
+
+                private:
+                    COIdentifier identifier;
+
+                    AllowedUsageFlags allowedUsageFlags;
+
+                    bool isSession;
+
+                    bool isExportable;
+
+                    std::shared_ptr<AesKeyPrimitiveId> primitiveId;
+
+                    CryptoPP::SecByteBlock keyData;
                 };
             }
         }

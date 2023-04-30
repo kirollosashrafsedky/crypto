@@ -5,6 +5,7 @@
 #include "ara/crypto/common/base_id_types.h"
 #include "ara/crypto/common/crypto_object_uid.h"
 #include "ara/crypto/cryp/cryobj/crypto_primitive_id.h"
+#include "ara/crypto/common/crypto_error_domain.h"
 #include "ara/crypto/common/io_interface.h"
 #include "ara/core/result.h"
 
@@ -29,7 +30,18 @@ namespace ara
                 virtual ~CryptoObject() noexcept = default;
 
                 template <class ConcreteObject>
-                static core::Result<typename ConcreteObject::Uptrc> Downcast(CryptoObject::Uptrc &&object) noexcept;
+                static core::Result<typename ConcreteObject::Uptrc> Downcast(CryptoObject::Uptrc &&object) noexcept
+                {
+                    auto derived_ptr = dynamic_cast<const ConcreteObject *>(object.get());
+                    if (!derived_ptr)
+                    {
+                        return core::Result<typename ConcreteObject::Uptrc>::FromError(CryptoErrc::kInvalidArgument);
+                    }
+
+                    auto derived_object = std::unique_ptr<const ConcreteObject>(derived_ptr);
+                    object.release();
+                    return core::Result<typename ConcreteObject::Uptrc>::FromValue(std::move(derived_object));
+                }
 
                 virtual CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept = 0;
 

@@ -1,6 +1,6 @@
 # Define the compiler and flags
 CXX := g++
-CXXFLAGS := -Wall -Wextra -Wpedantic -std=c++14 -g
+CXXFLAGS := -Wall -Wextra -Wpedantic -std=c++14 -g #-Werror
 INCLUDE_DIRS := -Icore/include/public -Icrypto/include/private -Icrypto/include/public
 LDLIBS = -lcryptopp
 DEPFLAGS = -MMD -MT $@

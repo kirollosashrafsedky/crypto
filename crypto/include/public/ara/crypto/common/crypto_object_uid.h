@@ -26,17 +26,35 @@ namespace ara
             bool SourceIsNil() const noexcept;
         };
 
-        constexpr bool operator==(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept;
+        constexpr bool operator==(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept
+        {
+            return ((lhs.mGeneratorUid == rhs.mGeneratorUid) && (lhs.mVersionStamp == rhs.mVersionStamp));
+        }
 
-        constexpr bool operator<(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept;
+        constexpr bool operator<(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept
+        {
+            return (lhs.mGeneratorUid < rhs.mGeneratorUid);
+        }
 
-        constexpr bool operator>(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept;
+        constexpr bool operator>(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept
+        {
+            return (lhs.mGeneratorUid > rhs.mGeneratorUid);
+        }
 
-        constexpr bool operator!=(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept;
+        constexpr bool operator!=(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
 
-        constexpr bool operator<=(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept;
+        constexpr bool operator<=(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept
+        {
+            return (lhs.mGeneratorUid <= rhs.mGeneratorUid);
+        }
 
-        constexpr bool operator>=(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept;
+        constexpr bool operator>=(const CryptoObjectUid &lhs, const CryptoObjectUid &rhs) noexcept
+        {
+            return (lhs.mGeneratorUid >= rhs.mGeneratorUid);
+        }
     }
 }
 

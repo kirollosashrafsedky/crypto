@@ -1,7 +1,16 @@
 #ifndef _SYMMETRIC_KEY_WRAPPER_H_
 #define _SYMMETRIC_KEY_WRAPPER_H_
 
+#include <memory>
+#include "ara/crypto/common/base_id_types.h"
 #include "ara/crypto/cryp/crypto_context.h"
+#include "ara/crypto/cryp/extension_service.h"
+#include "ara/core/result.h"
+#include "ara/core/utility.h"
+#include "ara/core/vector.h"
+#include "ara/crypto/common/mem_region.h"
+#include "ara/crypto/cryp/cryobj/symmetric_key.h"
+#include "ara/crypto/cryp/cryobj/secret_seed.h"
 
 namespace ara
 {

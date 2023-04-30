@@ -17,17 +17,40 @@ namespace ara
             bool IsNil() const noexcept;
         };
 
-        constexpr bool operator==(const Uuid &lhs, const Uuid &rhs) noexcept;
+        constexpr bool operator==(const Uuid &lhs, const Uuid &rhs) noexcept
+        {
+            return (lhs.mQwordLs == rhs.mQwordLs && lhs.mQwordMs == rhs.mQwordMs);
+        }
 
-        constexpr bool operator<(const Uuid &lhs, const Uuid &rhs) noexcept;
+        constexpr bool operator<(const Uuid &lhs, const Uuid &rhs) noexcept
+        {
+            if (lhs.mQwordMs < rhs.mQwordMs)
+                return true;
+            else if (lhs.mQwordMs > rhs.mQwordMs)
+                return false;
+            else
+                return (lhs.mQwordLs < rhs.mQwordLs);
+        }
 
-        constexpr bool operator>(const Uuid &lhs, const Uuid &rhs) noexcept;
+        constexpr bool operator!=(const Uuid &lhs, const Uuid &rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
 
-        constexpr bool operator!=(const Uuid &lhs, const Uuid &rhs) noexcept;
+        constexpr bool operator>(const Uuid &lhs, const Uuid &rhs) noexcept
+        {
+            return (!(lhs < rhs) && (lhs != rhs));
+        }
 
-        constexpr bool operator<=(const Uuid &lhs, const Uuid &rhs) noexcept;
+        constexpr bool operator<=(const Uuid &lhs, const Uuid &rhs) noexcept
+        {
+            return ((lhs < rhs) || (lhs == rhs));
+        }
 
-        constexpr bool operator>=(const Uuid &lhs, const Uuid &rhs) noexcept;
+        constexpr bool operator>=(const Uuid &lhs, const Uuid &rhs) noexcept
+        {
+            return ((lhs > rhs) || (lhs == rhs));
+        }
     }
 }
 

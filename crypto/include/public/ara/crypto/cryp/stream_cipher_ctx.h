@@ -1,7 +1,16 @@
 #ifndef _STREAM_CIPHER_CTX_H_
 #define _STREAM_CIPHER_CTX_H_
 
+#include <memory>
+#include "ara/crypto/common/base_id_types.h"
 #include "ara/crypto/cryp/crypto_context.h"
+#include "ara/crypto/cryp/block_service.h"
+#include "ara/core/result.h"
+#include "ara/core/utility.h"
+#include "ara/core/vector.h"
+#include "ara/crypto/common/mem_region.h"
+#include "ara/crypto/cryp/cryobj/symmetric_key.h"
+#include "ara/crypto/cryp/cryobj/secret_seed.h"
 
 namespace ara
 {
