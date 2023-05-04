@@ -11,6 +11,8 @@ namespace ara
     {
         namespace cryp
         {
+            class CryptoProvider;
+
             namespace internal
             {
                 class AesSymmetricKey : public SymmetricKey
@@ -52,6 +54,9 @@ namespace ara
                     std::shared_ptr<AesKeyPrimitiveId> primitiveId;
 
                     CryptoPP::SecByteBlock keyData;
+
+                    // TODO: reference
+                    const CryptoProvider *cryptoProvider;
                 };
             }
         }

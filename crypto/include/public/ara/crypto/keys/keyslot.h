@@ -9,6 +9,11 @@ namespace ara
 {
     namespace crypto
     {
+        namespace cryp
+        {
+            class CryptoProvider;
+        }
+
         namespace keys
         {
             class KeySlot
@@ -28,7 +33,7 @@ namespace ara
 
                 virtual bool IsEmpty() const noexcept = 0;
 
-                virtual core::Result<IOInterface::Uptr> Open(bool subscribeForUpdates = false, bool writeable = false) const noexcept = 0;
+                virtual core::Result<IOInterface::Uptr> Open(bool subscribeForUpdates = false, bool writeable = false) noexcept = 0;
 
                 virtual core::Result<void> SaveCopy(const IOInterface &container) noexcept = 0;
 

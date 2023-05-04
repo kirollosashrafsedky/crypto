@@ -9,6 +9,10 @@ namespace ara
         {
             using namespace internal;
 
+            CryptoppCryptoProvider::CryptoppCryptoProvider()
+                : isSpecifier(CRYPTOPP_CRYPTO_PROVIDER)
+            {
+            }
             core::Result<VolatileTrustedContainer::Uptr> CryptoppCryptoProvider::AllocVolatileContainer(std::size_t capacity) noexcept
             {
             }

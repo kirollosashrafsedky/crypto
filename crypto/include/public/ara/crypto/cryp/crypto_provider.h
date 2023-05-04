@@ -22,6 +22,8 @@
 #include "ara/crypto/cryp/symmetric_key_wrapper_ctx.h"
 #include "ara/crypto/cryp/verifier_public_ctx.h"
 
+#define CRYPTOPP_CRYPTO_PROVIDER "CryptoppCryptoProvider"
+
 namespace ara
 {
     namespace crypto

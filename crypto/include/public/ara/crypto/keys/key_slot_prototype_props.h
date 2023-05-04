@@ -13,17 +13,17 @@ namespace ara
             {
                 using Uptr = std::unique_ptr<KeySlotPrototypeProps>;
 
-                CryptoAlgId mAlgId;
-
                 bool mAllocateSpareSlot;
 
                 bool mAllowContentTypeChange;
 
-                AllowedUsageFlags mContentAllowedUsage;
-
                 bool mExportAllowed;
 
                 std::int32_t mMaxUpdateAllowed;
+
+                CryptoAlgId mAlgId;
+
+                AllowedUsageFlags mContentAllowedUsage;
 
                 KeySlotType mSlotType;
 
@@ -34,9 +34,19 @@ namespace ara
                 KeySlotPrototypeProps() = default;
             };
 
-            constexpr bool operator==(const KeySlotPrototypeProps &lhs, const KeySlotPrototypeProps &rhs) noexcept;
+            constexpr bool operator==(const KeySlotPrototypeProps &lhs, const KeySlotPrototypeProps &rhs) noexcept
+            {
+                return ((lhs.mAllocateSpareSlot == rhs.mAllocateSpareSlot) && (lhs.mAllowContentTypeChange == rhs.mAllowContentTypeChange) &&
+                        (lhs.mExportAllowed == rhs.mExportAllowed) && (lhs.mMaxUpdateAllowed == rhs.mMaxUpdateAllowed) &&
+                        (lhs.mAlgId == rhs.mAlgId) && (lhs.mContentAllowedUsage == rhs.mContentAllowedUsage) &&
+                        (lhs.mSlotType == rhs.mSlotType) && (lhs.mSlotCapacity == rhs.mSlotCapacity) &&
+                        (lhs.mObjectType == rhs.mObjectType));
+            }
 
-            constexpr bool operator!=(const KeySlotPrototypeProps &lhs, const KeySlotPrototypeProps &rhs) noexcept;
+            constexpr bool operator!=(const KeySlotPrototypeProps &lhs, const KeySlotPrototypeProps &rhs) noexcept
+            {
+                return !(lhs == rhs);
+            }
 
         }
     }

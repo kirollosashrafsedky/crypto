@@ -1,0 +1,23 @@
+{
+    "CryptoProviders": [
+        {
+            "CryptoppCryptoProvider": {
+                "KeySlots": [
+                    {
+                        "InstanceSpecifier": "aes_symmetric_key_1",
+                        "KeyMaterialPath": "keyslots/aes_symmetric_key_1",
+                        "AlgId": "1",
+                        "AllowedUsageFlags": "0xFFFFFFFF",
+                        "CryptoObjectType": "kSymmetricKey",
+                        "Exportable": true,
+                        "SlotType": "kApplication",
+                        "SlotCapacity": 16,
+                        "AllocateShadowCopy": true,
+                        "AllowContentTypeChange": false,
+                        "MaxUpdateAllowed": -1
+                    }
+                ]
+            }
+        }
+    ]
+}

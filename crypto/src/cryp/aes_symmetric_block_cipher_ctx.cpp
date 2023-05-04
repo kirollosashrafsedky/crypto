@@ -160,6 +160,7 @@ namespace ara
                 return {};
             }
 
+            // TODO: errors
             core::Result<void> AesSymmetricBlockCipherCtx::SetKey(const SymmetricKey &key, CryptoTransform transform) noexcept
             {
                 AesSymmetricKey *aesKey = new AesSymmetricKey(key.GetObjectId(), (dynamic_cast<const AesSymmetricKey &>(key)).getKeyData());

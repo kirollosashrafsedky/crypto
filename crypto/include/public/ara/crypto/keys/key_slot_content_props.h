@@ -24,12 +24,22 @@ namespace ara
 
                 AllowedUsageFlags mContentAllowedUsage;
 
+                // ALERT: Not in AUTOSAR STANDARD
+                bool isExportable;
+
                 KeySlotContentProps() = default;
             };
 
-            constexpr bool operator==(const KeySlotContentProps &lhs, const KeySlotContentProps &rhs) noexcept;
-
-            constexpr bool operator!=(const KeySlotContentProps &lhs, const KeySlotContentProps &rhs) noexcept;
+            constexpr bool operator==(const KeySlotContentProps &lhs, const KeySlotContentProps &rhs) noexcept
+            {
+                return ((lhs.mAlgId == rhs.mAlgId) && (lhs.mObjectSize == rhs.mObjectSize) &&
+                        (lhs.mObjectType == rhs.mObjectType) && (lhs.mObjectUid == rhs.mObjectUid) &&
+                        (lhs.mContentAllowedUsage == rhs.mContentAllowedUsage) && (lhs.isExportable == rhs.isExportable));
+            }
+            constexpr bool operator!=(const KeySlotContentProps &lhs, const KeySlotContentProps &rhs) noexcept
+            {
+                return !(lhs == rhs);
+            }
         }
     }
 }

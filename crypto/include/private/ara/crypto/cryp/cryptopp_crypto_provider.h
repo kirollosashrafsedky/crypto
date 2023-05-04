@@ -2,6 +2,7 @@
 #define _CRYPTOPP_CRYPTO_PROVIDER_H_
 
 #include "ara/crypto/cryp/crypto_provider.h"
+#include "ara/core/instance_specifier.h"
 
 namespace ara
 {
@@ -13,6 +14,11 @@ namespace ara
             {
                 class CryptoppCryptoProvider : public CryptoProvider
                 {
+                public:
+                    using Uptr = std::unique_ptr<CryptoppCryptoProvider>;
+
+                    CryptoppCryptoProvider();
+
                     core::Result<VolatileTrustedContainer::Uptr> AllocVolatileContainer(std::size_t capacity) noexcept;
 
                     core::Result<VolatileTrustedContainer::Uptr> AllocVolatileContainer(std::pair<AlgId, CryptoObjectType> theObjectDef) noexcept;
@@ -88,6 +94,9 @@ namespace ara
                     core::Result<SecretSeed::Uptrc> LoadSecretSeed(const IOInterface &container) noexcept;
 
                     core::Result<SymmetricKey::Uptrc> LoadSymmetricKey(const IOInterface &container) noexcept;
+
+                private:
+                    const core::InstanceSpecifier isSpecifier;
                 };
             }
         }

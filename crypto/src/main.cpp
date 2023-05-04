@@ -11,6 +11,8 @@
 #include <cryptopp/osrng.h>
 #include <cryptopp/files.h>
 
+#include "ara/crypto/common/mem_trusted_container.h"
+
 using namespace ara::core;
 using namespace ara::crypto;
 using namespace CryptoPP;
@@ -43,6 +45,7 @@ int main()
 {
     cryp::internal::AesSymmetricKey::Uptrc key = cryp::CryptoObject::Downcast<cryp::internal::AesSymmetricKey>(GenerateSymmetricKey(0, false, false)).Value();
 
+    // cryp::CryptoProvider *provider = new cryp::internal::CryptoppCryptoProvider;
     cryp::internal::CryptoppCryptoProvider provider;
     cryp::internal::AesSymmetricBlockCipherCtx aesSymmetricBlockCipherCtx(provider);
 
@@ -95,6 +98,33 @@ int main()
     std::cout << "Crypto service: " << aesSymmetricBlockCipherCtx.GetCryptoService()->GetActualKeyBitLength() << std::endl;
 
     std::cout << "Primitive name: " << (aesSymmetricBlockCipherCtx.GetCryptoPrimitiveId() ? aesSymmetricBlockCipherCtx.GetCryptoPrimitiveId()->GetPrimitiveName() : "not defined") << std::endl;
+
+    // Vector<Byte> keyMaterial;
+
+    // keyMaterial.reserve(50);
+
+    // std::cout << keyMaterial.size() << " " << keyMaterial.capacity() << std::endl;
+
+    ara::crypto::internal::MemTrustedContainer x(provider);
+
+    // std::cout << x.algId << std::endl;
+    // std::cout << x.cryptoProvider << std::endl;
+    // std::cout << x.isExportable << std::endl;
+    // std::cout << x.isSession << std::endl;
+    // std::cout << x.allowedUsageFlags << std::endl;
+    // std::cout << int(x.objectType) << std::endl;
+    // std::cout << x.objectUid.mGeneratorUid.mQwordLs << std::endl;
+    // std::cout << x.objectUid.mGeneratorUid.mQwordMs << std::endl;
+    // std::cout << x.objectUid.mVersionStamp << std::endl;
+    // x.getKeyMaterial().push_back(5);
+    std::cout << x.getKeyMaterial().capacity() << std::endl;
+    Vector<Byte> test;
+    test.push_back((Byte)'b');
+    x.setKeyMaterial(test);
+    std::cout << static_cast<unsigned char>(x.getKeyMaterial().back()) << std::endl;
+
+    // cryp::internal::CryptoppCryptoProvider provider2;
+    // x.setMyProvider(provider2);
 
     return 0;
 }

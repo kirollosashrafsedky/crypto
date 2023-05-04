@@ -19,6 +19,7 @@ namespace ara
             {
             public:
                 using Uptrc = std::unique_ptr<const CryptoObject>;
+
                 using Uptr = std::unique_ptr<CryptoObject>;
 
                 struct COIdentifier

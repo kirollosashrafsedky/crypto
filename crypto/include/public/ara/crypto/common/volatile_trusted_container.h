@@ -15,7 +15,8 @@ namespace ara
 
             virtual ~VolatileTrustedContainer() noexcept = default;
 
-            virtual IOInterface &GetIOInterface() const noexcept = 0;
+            // ALERT: In AUTOSAR STANDARD, this method is const
+            virtual IOInterface &GetIOInterface() noexcept = 0;
 
             VolatileTrustedContainer &operator=(const VolatileTrustedContainer &other) = default;
 
