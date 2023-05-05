@@ -25,7 +25,9 @@ namespace ara
 
                 using Uptrc = std::unique_ptr<const FileIOInterface>;
 
-                FileIOInterface(keys::internal::FileKeySlot &fileKeySlot);
+                FileIOInterface();
+
+                FileIOInterface(keys::internal::FileKeySlot *fileKeySlot);
 
                 AllowedUsageFlags GetAllowedUsage() const noexcept override;
 
@@ -65,12 +67,12 @@ namespace ara
 
                 void setExportable(bool isExportable) const noexcept override;
 
-                const cryp::CryptoProvider &getProvider() const noexcept override;
+                cryp::CryptoProvider const *getProvider() const noexcept override;
 
-                void setProvider(const cryp::CryptoProvider &cryptoProvider) noexcept override;
+                void setProvider(cryp::CryptoProvider const *cryptoProvider) noexcept override;
 
             private:
-                keys::internal::FileKeySlot &fileKeySlot;
+                keys::internal::FileKeySlot *fileKeySlot;
             };
         }
     }

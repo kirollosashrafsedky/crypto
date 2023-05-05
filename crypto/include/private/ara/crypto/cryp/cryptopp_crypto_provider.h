@@ -2,7 +2,6 @@
 #define _CRYPTOPP_CRYPTO_PROVIDER_H_
 
 #include "ara/crypto/cryp/crypto_provider.h"
-#include "ara/core/instance_specifier.h"
 
 namespace ara
 {
@@ -94,6 +93,8 @@ namespace ara
                     core::Result<SecretSeed::Uptrc> LoadSecretSeed(const IOInterface &container) noexcept;
 
                     core::Result<SymmetricKey::Uptrc> LoadSymmetricKey(const IOInterface &container) noexcept;
+
+                    core::InstanceSpecifier getSpecifier() const noexcept override;
 
                 private:
                     const core::InstanceSpecifier isSpecifier;

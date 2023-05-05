@@ -23,7 +23,7 @@ namespace ara
             public:
                 using Uptr = std::unique_ptr<MemTrustedContainer>;
 
-                MemTrustedContainer(cryp::CryptoProvider &cryptoProvider, std::size_t capacity = MEM_TRUSTED_CONTAINER_DEFAULT_CAPACITY);
+                MemTrustedContainer(cryp::CryptoProvider const *cryptoProvider, std::size_t capacity = MEM_TRUSTED_CONTAINER_DEFAULT_CAPACITY);
 
                 IOInterface &GetIOInterface() noexcept override;
 
@@ -33,7 +33,7 @@ namespace ara
 
                 const cryp::CryptoProvider &MyProvider() const noexcept;
 
-                void setMyProvider(const cryp::CryptoProvider &cryptoProvider) noexcept;
+                void setMyProvider(cryp::CryptoProvider const *cryptoProvider) noexcept;
 
                 CryptoAlgId getAlgId() const noexcept;
 
@@ -72,7 +72,7 @@ namespace ara
 
                 MemIOInterface memIoInterface;
 
-                cryp::CryptoProvider &cryptoProvider;
+                cryp::CryptoProvider const *cryptoProvider;
 
                 CryptoAlgId algId;
 

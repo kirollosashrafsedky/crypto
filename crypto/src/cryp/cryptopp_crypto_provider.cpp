@@ -165,6 +165,10 @@ namespace ara
             {
             }
 
+            core::InstanceSpecifier CryptoppCryptoProvider::getSpecifier() const noexcept
+            {
+                return this->isSpecifier;
+            }
         }
     }
 }

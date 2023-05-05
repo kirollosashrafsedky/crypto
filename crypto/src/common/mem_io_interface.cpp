@@ -107,12 +107,12 @@ namespace ara
             this->memTrustedContainer.setIsExportable(isExportable);
         }
 
-        const cryp::CryptoProvider &MemIOInterface::getProvider() const noexcept
+        cryp::CryptoProvider const *MemIOInterface::getProvider() const noexcept
         {
-            return this->memTrustedContainer.MyProvider();
+            return &(this->memTrustedContainer.MyProvider());
         }
 
-        void MemIOInterface::setProvider(const cryp::CryptoProvider &cryptoProvider) noexcept
+        void MemIOInterface::setProvider(cryp::CryptoProvider const *cryptoProvider) noexcept
         {
             this->memTrustedContainer.setMyProvider(cryptoProvider);
         }

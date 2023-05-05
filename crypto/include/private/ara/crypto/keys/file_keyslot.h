@@ -14,18 +14,24 @@ namespace ara
         {
             namespace internal
             {
+                class MainKeyStorageProvider;
+
                 class FileKeySlot : public KeySlot
                 {
                 public:
                     using Uptr = std::unique_ptr<FileKeySlot>;
 
-                    FileKeySlot(cryp::CryptoProvider &cryptoProvider, const KeySlotPrototypeProps &keySlotPrototypeProps);
+                    FileKeySlot(const core::InstanceSpecifier &iSpecify, MainKeyStorageProvider *keyStorageProvider, cryp::CryptoProvider const *cryptoProvider, const KeySlotPrototypeProps &keySlotPrototypeProps, const std::string &fileName);
+
+                    FileKeySlot(const core::InstanceSpecifier &iSpecify);
+
+                    FileKeySlot(const FileKeySlot &FileKeySlot);
 
                     core::Result<void> Clear() noexcept override;
 
                     core::Result<KeySlotContentProps> GetContentProps() const noexcept override;
 
-                    KeySlotContentProps &GetContentPropsUpdate() noexcept;
+                    core::Result<KeySlotContentProps *> GetContentPropsUpdate() noexcept;
 
                     core::Result<cryp::CryptoProvider::Uptr> MyProvider() const noexcept override;
 
@@ -39,16 +45,28 @@ namespace ara
 
                     core::Vector<core::Byte> getKeyMaterial() const noexcept;
 
-                    void setKeyMaterial(const core::Vector<core::Byte> &keyMaterial) noexcept;
+                    core::Result<void> setKeyMaterial(const core::Vector<core::Byte> &keyMaterial) noexcept;
 
                     bool IsModified() const noexcept;
 
                     bool IsWritable() const noexcept;
 
-                    void setProvider(const cryp::CryptoProvider &cryptoProvider) noexcept;
+                    core::Result<void> setProvider(const cryp::CryptoProvider *cryptoProvider) noexcept;
+
+                    bool saveFile() noexcept;
+
+                    core::InstanceSpecifier getIspecifier() const noexcept;
+
+                    FileKeySlot &operator=(const FileKeySlot &other) = default;
+
+                    FileKeySlot &operator=(FileKeySlot &&other) = default;
 
                 private:
-                    cryp::CryptoProvider &cryptoProvider;
+                    core::InstanceSpecifier iSpecify;
+
+                    MainKeyStorageProvider *keyStorageProvider;
+
+                    cryp::CryptoProvider const *cryptoProvider;
 
                     KeySlotPrototypeProps keySlotPrototypeProps;
 
@@ -63,6 +81,8 @@ namespace ara
                     bool isWritable;
 
                     bool isModified;
+
+                    std::string fileName;
                 };
             }
         }

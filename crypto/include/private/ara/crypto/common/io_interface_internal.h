@@ -38,9 +38,9 @@ namespace ara
 
                 virtual void setExportable(bool isExportable) const noexcept = 0;
 
-                virtual const cryp::CryptoProvider &getProvider() const noexcept = 0;
+                virtual cryp::CryptoProvider const *getProvider() const noexcept = 0;
 
-                virtual void setProvider(const crypto::cryp::CryptoProvider &cryptoProvider) noexcept = 0;
+                virtual void setProvider(crypto::cryp::CryptoProvider const *cryptoProvider) noexcept = 0;
             };
         }
     }

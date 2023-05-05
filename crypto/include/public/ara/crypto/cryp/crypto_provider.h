@@ -2,6 +2,7 @@
 #define _CRYPTO_PROVIDER_H_
 
 #include "ara/core/string.h"
+#include "ara/core/instance_specifier.h"
 #include "ara/crypto/common/serializable.h"
 #include "ara/crypto/common/volatile_trusted_container.h"
 #include "ara/crypto/cryp/auth_cipher_ctx.h"
@@ -112,6 +113,8 @@ namespace ara
                 virtual core::Result<SecretSeed::Uptrc> LoadSecretSeed(const IOInterface &container) noexcept = 0;
 
                 virtual core::Result<SymmetricKey::Uptrc> LoadSymmetricKey(const IOInterface &container) noexcept = 0;
+
+                virtual core::InstanceSpecifier getSpecifier() const noexcept = 0;
 
                 CryptoProvider &operator=(const CryptoProvider &other) = default;
 

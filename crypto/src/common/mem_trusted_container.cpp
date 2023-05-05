@@ -7,7 +7,7 @@ namespace ara
     {
         using namespace internal;
 
-        MemTrustedContainer::MemTrustedContainer(cryp::CryptoProvider &cryptoProvider, std::size_t capacity)
+        MemTrustedContainer::MemTrustedContainer(cryp::CryptoProvider const *cryptoProvider, std::size_t capacity)
             : memIoInterface(*this), cryptoProvider(cryptoProvider),
               algId(0), objectType(CryptoObjectType::kUndefined),
               allowedUsageFlags(kAllowPrototypedOnly), isExportable(false), isSession(false)
@@ -32,10 +32,10 @@ namespace ara
 
         const cryp::CryptoProvider &MemTrustedContainer::MyProvider() const noexcept
         {
-            return this->cryptoProvider;
+            return *this->cryptoProvider;
         }
 
-        void MemTrustedContainer::setMyProvider(const cryp::CryptoProvider &cryptoProvider) noexcept
+        void MemTrustedContainer::setMyProvider(cryp::CryptoProvider const *cryptoProvider) noexcept
         {
             this->cryptoProvider = cryptoProvider;
         }

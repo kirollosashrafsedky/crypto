@@ -1,23 +1,32 @@
 {
-    "CryptoProviders": [
+    "KeySlots": [
         {
-            "CryptoppCryptoProvider": {
-                "KeySlots": [
-                    {
-                        "InstanceSpecifier": "aes_symmetric_key_1",
-                        "KeyMaterialPath": "keyslots/aes_symmetric_key_1",
-                        "AlgId": "1",
-                        "AllowedUsageFlags": "0xFFFFFFFF",
-                        "CryptoObjectType": "kSymmetricKey",
-                        "Exportable": true,
-                        "SlotType": "kApplication",
-                        "SlotCapacity": 16,
-                        "AllocateShadowCopy": true,
-                        "AllowContentTypeChange": false,
-                        "MaxUpdateAllowed": -1
-                    }
-                ]
-            }
+            "InstanceSpecifier": "aes_symmetric_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots/aes_symmetric_key_1",
+            "AlgId": "1",
+            "AllowedUsageFlags": "0xFFFFFFFF",
+            "CryptoObjectType": "kSymmetricKey",
+            "Exportable": true,
+            "SlotType": "kApplication",
+            "SlotCapacity": 16,
+            "AllocateShadowCopy": true,
+            "AllowContentTypeChange": false,
+            "MaxUpdateAllowed": -1
+        },
+        {
+            "InstanceSpecifier": "aes_symmetric_key_2",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots/aes_symmetric_key_2",
+            "AlgId": "1",
+            "AllowedUsageFlags": "0xFFFFFFFF",
+            "CryptoObjectType": "kSymmetricKey",
+            "Exportable": true,
+            "SlotType": "kApplication",
+            "SlotCapacity": 16,
+            "AllocateShadowCopy": true,
+            "AllowContentTypeChange": false,
+            "MaxUpdateAllowed": -1
         }
     ]
 }

@@ -7,14 +7,19 @@ namespace ara
     {
         using namespace internal;
 
-        FileIOInterface::FileIOInterface(keys::internal::FileKeySlot &fileKeySlot)
+        FileIOInterface::FileIOInterface(keys::internal::FileKeySlot *fileKeySlot)
             : fileKeySlot(fileKeySlot)
+        {
+        }
+
+        FileIOInterface::FileIOInterface()
+            : FileIOInterface(nullptr)
         {
         }
 
         AllowedUsageFlags FileIOInterface::GetAllowedUsage() const noexcept
         {
-            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot.GetContentProps();
+            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot->GetContentProps();
             if (result.HasValue())
                 return result.Value().mContentAllowedUsage;
             else
@@ -23,7 +28,7 @@ namespace ara
 
         std::size_t FileIOInterface::GetCapacity() const noexcept
         {
-            core::Result<keys::KeySlotPrototypeProps> result = this->fileKeySlot.GetPrototypedProps();
+            core::Result<keys::KeySlotPrototypeProps> result = this->fileKeySlot->GetPrototypedProps();
             if (result.HasValue())
                 return result.Value().mSlotCapacity;
             else
@@ -32,7 +37,7 @@ namespace ara
 
         CryptoObjectType FileIOInterface::GetCryptoObjectType() const noexcept
         {
-            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot.GetContentProps();
+            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot->GetContentProps();
             if (result.HasValue())
                 return result.Value().mObjectType;
             else
@@ -41,7 +46,7 @@ namespace ara
 
         CryptoObjectUid FileIOInterface::GetObjectId() const noexcept
         {
-            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot.GetContentProps();
+            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot->GetContentProps();
             if (result.HasValue())
                 return result.Value().mObjectUid;
             else
@@ -50,12 +55,12 @@ namespace ara
 
         std::size_t FileIOInterface::GetPayloadSize() const noexcept
         {
-            return this->fileKeySlot.getKeyMaterial().size();
+            return this->fileKeySlot->getKeyMaterial().size();
         }
 
         CryptoAlgId FileIOInterface::GetPrimitiveId() const noexcept
         {
-            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot.GetContentProps();
+            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot->GetContentProps();
             if (result.HasValue())
                 return result.Value().mAlgId;
             else
@@ -64,7 +69,7 @@ namespace ara
 
         CryptoObjectType FileIOInterface::GetTypeRestriction() const noexcept
         {
-            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot.GetContentProps();
+            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot->GetContentProps();
             if (result.HasValue())
                 return result.Value().mObjectType;
             else
@@ -73,7 +78,7 @@ namespace ara
 
         bool FileIOInterface::IsObjectExportable() const noexcept
         {
-            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot.GetContentProps();
+            core::Result<keys::KeySlotContentProps> result = this->fileKeySlot->GetContentProps();
             if (result.HasValue())
                 return result.Value().isExportable;
             else
@@ -92,57 +97,57 @@ namespace ara
 
         bool FileIOInterface::IsValid() const noexcept
         {
-            return !this->fileKeySlot.IsModified();
+            return !this->fileKeySlot->IsModified();
         }
 
         bool FileIOInterface::IsWritable() const noexcept
         {
-            return this->fileKeySlot.IsWritable();
+            return this->fileKeySlot->IsWritable();
         }
 
         core::Vector<core::Byte> FileIOInterface::getKeyMaterial() const noexcept
         {
-            return this->fileKeySlot.getKeyMaterial();
+            return this->fileKeySlot->getKeyMaterial();
         }
 
         void FileIOInterface::setKeyMaterial(const core::Vector<core::Byte> &keyMaterial) const noexcept
         {
-            this->fileKeySlot.setKeyMaterial(keyMaterial);
+            this->fileKeySlot->setKeyMaterial(keyMaterial);
         }
 
         void FileIOInterface::SetAllowedUsage(AllowedUsageFlags allowedUsageFlags) noexcept
         {
-            this->fileKeySlot.GetContentPropsUpdate().mContentAllowedUsage = allowedUsageFlags;
+            this->fileKeySlot->GetContentPropsUpdate().Value()->mContentAllowedUsage = allowedUsageFlags;
         }
 
         void FileIOInterface::SetCryptoObjectType(CryptoObjectType cryptoObjectType) noexcept
         {
-            this->fileKeySlot.GetContentPropsUpdate().mObjectType = cryptoObjectType;
+            this->fileKeySlot->GetContentPropsUpdate().Value()->mObjectType = cryptoObjectType;
         }
 
         void FileIOInterface::SetObjectId(CryptoObjectUid cryptoObjectUid) noexcept
         {
-            this->fileKeySlot.GetContentPropsUpdate().mObjectUid = cryptoObjectUid;
+            this->fileKeySlot->GetContentPropsUpdate().Value()->mObjectUid = cryptoObjectUid;
         }
 
         void FileIOInterface::SetPrimitiveId(CryptoAlgId primitiveId) noexcept
         {
-            this->fileKeySlot.GetContentPropsUpdate().mAlgId = primitiveId;
+            this->fileKeySlot->GetContentPropsUpdate().Value()->mAlgId = primitiveId;
         }
 
         void FileIOInterface::setExportable(bool isExportable) const noexcept
         {
-            this->fileKeySlot.GetContentPropsUpdate().isExportable = isExportable;
+            this->fileKeySlot->GetContentPropsUpdate().Value()->isExportable = isExportable;
         }
 
-        const cryp::CryptoProvider &FileIOInterface::getProvider() const noexcept
+        cryp::CryptoProvider const *FileIOInterface::getProvider() const noexcept
         {
-            return *(this->fileKeySlot.MyProvider().Value().get());
+            return this->fileKeySlot->MyProvider().Value().get();
         }
 
-        void FileIOInterface::setProvider(const cryp::CryptoProvider &cryptoProvider) noexcept
+        void FileIOInterface::setProvider(cryp::CryptoProvider const *cryptoProvider) noexcept
         {
-            this->fileKeySlot.setProvider(cryptoProvider);
+            this->fileKeySlot->setProvider(cryptoProvider);
         }
     }
 }

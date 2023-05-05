@@ -58,9 +58,9 @@ namespace ara
 
                 void setExportable(bool isExportable) const noexcept override;
 
-                const cryp::CryptoProvider &getProvider() const noexcept override;
+                cryp::CryptoProvider const *getProvider() const noexcept override;
 
-                void setProvider(const cryp::CryptoProvider &cryptoProvider) noexcept override;
+                void setProvider(cryp::CryptoProvider const *cryptoProvider) noexcept override;
 
                 CryptoObjectUid GetDependantObjectId() const noexcept;
 
