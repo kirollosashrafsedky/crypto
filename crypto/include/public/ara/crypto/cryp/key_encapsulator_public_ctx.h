@@ -17,11 +17,11 @@ namespace ara
             class KeyEncapsulatorPublicCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<KeyEncapsulatorPublicCtx>;
+                using Sptr = std::shared_ptr<KeyEncapsulatorPublicCtx>;
 
                 virtual std::size_t GetEncapsulatedSize() const noexcept = 0;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual std::size_t GetKekEntropy() const noexcept = 0;
 

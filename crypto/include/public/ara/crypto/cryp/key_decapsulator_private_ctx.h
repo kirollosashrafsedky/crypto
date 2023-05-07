@@ -19,15 +19,15 @@ namespace ara
             class KeyDecapsulatorPrivateCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<KeyDecapsulatorPrivateCtx>;
+                using Sptr = std::shared_ptr<KeyDecapsulatorPrivateCtx>;
 
-                virtual core::Result<SymmetricKey::Uptrc> DecapsulateKey(ReadOnlyMemRegion input, CryptoAlgId keyingDataAlgId, KeyDerivationFunctionCtx &kdf, CryptoAlgId kekAlgId, core::Optional<AllowedUsageFlags> allowedUsage) const noexcept = 0;
+                virtual core::Result<SymmetricKey::Sptrc> DecapsulateKey(ReadOnlyMemRegion input, CryptoAlgId keyingDataAlgId, KeyDerivationFunctionCtx &kdf, CryptoAlgId kekAlgId, core::Optional<AllowedUsageFlags> allowedUsage) const noexcept = 0;
 
-                virtual core::Result<SecretSeed::Uptrc> DecapsulateSeed(ReadOnlyMemRegion input, core::Optional<AllowedUsageFlags> allowedUsage) const noexcept = 0;
+                virtual core::Result<SecretSeed::Sptrc> DecapsulateSeed(ReadOnlyMemRegion input, core::Optional<AllowedUsageFlags> allowedUsage) const noexcept = 0;
 
                 virtual std::size_t GetEncapsulatedSize() const noexcept = 0;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual std::size_t GetKekEntropy() const noexcept = 0;
 

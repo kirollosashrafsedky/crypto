@@ -16,9 +16,9 @@ namespace ara
             public:
                 using AlgId = CryptoAlgId;
 
-                using Uptrc = std::unique_ptr<const CryptoPrimitiveId>;
+                using Sptrc = std::shared_ptr<const CryptoPrimitiveId>;
 
-                using Uptr = std::unique_ptr<CryptoPrimitiveId>;
+                using Sptr = std::shared_ptr<CryptoPrimitiveId>;
 
                 virtual ~CryptoPrimitiveId() noexcept = default;
 

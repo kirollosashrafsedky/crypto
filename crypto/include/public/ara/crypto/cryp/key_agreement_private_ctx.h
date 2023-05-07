@@ -18,13 +18,13 @@ namespace ara
             class KeyAgreementPrivateCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<KeyAgreementPrivateCtx>;
+                using Sptr = std::shared_ptr<KeyAgreementPrivateCtx>;
 
-                virtual core::Result<SymmetricKey::Uptrc> AgreeKey(const PublicKey &otherSideKey, CryptoAlgId targetAlgId, AllowedUsageFlags allowedUsage, core::Optional<ReadOnlyMemRegion> salt, core::Optional<ReadOnlyMemRegion> ctxLabel) const noexcept = 0;
+                virtual core::Result<SymmetricKey::Sptrc> AgreeKey(const PublicKey &otherSideKey, CryptoAlgId targetAlgId, AllowedUsageFlags allowedUsage, core::Optional<ReadOnlyMemRegion> salt, core::Optional<ReadOnlyMemRegion> ctxLabel) const noexcept = 0;
 
-                virtual core::Result<SecretSeed::Uptrc> AgreeSeed(const PublicKey &otherSideKey, core::Optional<AllowedUsageFlags> allowedUsage) const noexcept = 0;
+                virtual core::Result<SecretSeed::Sptrc> AgreeSeed(const PublicKey &otherSideKey, core::Optional<AllowedUsageFlags> allowedUsage) const noexcept = 0;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual core::Result<void> Reset() noexcept = 0;
 

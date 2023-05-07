@@ -12,6 +12,8 @@ namespace ara
         {
             using namespace internal;
 
+            MainKeyStorageProvider::Sptr MainKeyStorageProvider::instance;
+
             MainKeyStorageProvider::MainKeyStorageProvider()
                 : currentTransactionId(0)
             {
@@ -23,7 +25,7 @@ namespace ara
                     return core::Result<TransactionId>::FromError(CryptoErrc::kInvalidArgument);
                 for (size_t i = 0; i < targetSlots.size(); i++)
                 {
-                    if (!targetSlots[i]->GetPrototypedProps()->mAllocateSpareSlot || !static_cast<FileKeySlot *>(targetSlots[i])->IsWritable())
+                    if (!targetSlots[i]->GetPrototypedProps()->mAllocateSpareSlot || !static_cast<FileKeySlot *>(targetSlots[i].get())->IsWritable())
                         return core::Result<TransactionId>::FromError(CryptoErrc::kUnreservedResource);
                     if (this->isSlotPendingTransaction(targetSlots[i]))
                         return core::Result<TransactionId>::FromError(CryptoErrc::kBusyResource);
@@ -34,7 +36,7 @@ namespace ara
                 std::vector<FileKeySlot> shadowCopySlots;
                 for (size_t i = 0; i < targetSlots.size(); i++)
                 {
-                    FileKeySlot temp(*(static_cast<FileKeySlot *>(targetSlots[i])));
+                    FileKeySlot temp(*(static_cast<FileKeySlot *>(targetSlots[i].get())));
                     shadowCopySlots.push_back(temp);
                 }
 
@@ -53,7 +55,7 @@ namespace ara
                 TransactionScope targetSlots = this->transactions[transactionIndex].targetSlots;
                 for (size_t i = 0; i < targetSlots.size(); i++)
                 {
-                    FileKeySlot *targetSlotPtr = static_cast<FileKeySlot *>(targetSlots[i]);
+                    FileKeySlot *targetSlotPtr = static_cast<FileKeySlot *>(targetSlots[i].get());
                     if (!targetSlotPtr->saveFile())
                     {
                         return {};
@@ -85,25 +87,20 @@ namespace ara
                 return {};
             }
 
-            UpdatesObserver::Uptr MainKeyStorageProvider::GetRegisteredObserver() const noexcept
+            UpdatesObserver::Sptr MainKeyStorageProvider::GetRegisteredObserver() const noexcept
             {
-                if (!this->observer)
-                    return nullptr;
-                UpdatesObserver *copyPtr = (UpdatesObserver *)malloc(sizeof(*(this->observer.get())));
-                std::memcpy((void *)copyPtr, (const void *)this->observer.get(), sizeof(*(this->observer.get())));
-                UpdatesObserver::Uptr copyUptr = UpdatesObserver::Uptr(copyPtr);
-                return copyUptr;
+                return this->observer;
             }
 
             // TODO
-            core::Result<KeySlot::Uptr> MainKeyStorageProvider::LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept
+            core::Result<KeySlot::Sptr> MainKeyStorageProvider::LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept
             {
                 // call IAM, if false: return error unauthorizedAccess, if true
                 std::ifstream file(this->manifestFileName);
                 if (!file.is_open())
                 {
                     std::cerr << "Failed to open file" << std::endl;
-                    core::Result<KeySlot::Uptr>::FromError(CryptoErrc::kInsufficientResource);
+                    core::Result<KeySlot::Sptr>::FromError(CryptoErrc::kInsufficientResource);
                 }
 
                 boost::property_tree::ptree root;
@@ -114,14 +111,14 @@ namespace ara
                 catch (boost::property_tree::json_parser::json_parser_error &e)
                 {
                     std::cerr << "Failed to parse JSON: " << e.what() << std::endl;
-                    return core::Result<KeySlot::Uptr>::FromError(CryptoErrc::kBadObjectType);
+                    return core::Result<KeySlot::Sptr>::FromError(CryptoErrc::kBadObjectType);
                 }
 
                 file.close();
 
                 bool isFound = false;
                 auto keySlotsArray = root.get_child("KeySlots");
-                KeySlot::Uptr keySlotUptr;
+                KeySlot::Sptr keySlotSptr;
 
                 for (const auto &slot : keySlotsArray)
                 {
@@ -131,30 +128,28 @@ namespace ara
                     {
                         std::string cryptoProvider = slot.second.get<std::string>("CryptoProvider");
 
-                        keySlotUptr = std::make_unique<FileKeySlot>(iSpecify);
-                        // keySlotUptr = std::make_unique<FileKeySlot>(iSpecify, this, );
+                        // keySlotSptr = std::make_shared<FileKeySlot>(iSpecify);
+                        // keySlotSptr = std::make_shared<FileKeySlot>(iSpecify,MainKeyStorageProvider::getInstance(), ,, );
                         isFound = true;
                         break;
                     }
                 }
                 if (!isFound)
                 {
-                    return core::Result<KeySlot::Uptr>::FromError(CryptoErrc::kUnreservedResource);
+                    return core::Result<KeySlot::Sptr>::FromError(CryptoErrc::kUnreservedResource);
                 }
-                // std::cout << algId << std::endl;
 
-                // read manifest, search for instanceSpecifier in all cryptoProviders
-                // if not found return error kUnreserved Resource, if found, extract all prototypes info
-                // create a KeySlot and return a Uptr to it
-
-                return core::Result<KeySlot::Uptr>::FromValue(std::move(keySlotUptr));
+                return core::Result<KeySlot::Sptr>::FromValue(keySlotSptr);
             }
 
-            UpdatesObserver::Uptr MainKeyStorageProvider::RegisterObserver(UpdatesObserver::Uptr observer) noexcept
+            UpdatesObserver::Sptr MainKeyStorageProvider::RegisterObserver(UpdatesObserver::Sptr observer) noexcept
             {
-                UpdatesObserver::Uptr previousObserver = std::move(this->observer);
+                UpdatesObserver::Sptr previousObserver = this->observer;
+                this->observer.reset();
                 if (observer)
-                    this->observer = std::move(observer);
+                {
+                    this->observer = observer;
+                }
                 return previousObserver;
             }
 
@@ -167,7 +162,7 @@ namespace ara
                 TransactionScope targetSlots = this->transactions[transactionIndex].targetSlots;
                 for (size_t i = 0; i < targetSlots.size(); i++)
                 {
-                    FileKeySlot *targetSlotPtr = static_cast<FileKeySlot *>(targetSlots[i]);
+                    FileKeySlot *targetSlotPtr = static_cast<FileKeySlot *>(targetSlots[i].get());
                     *targetSlotPtr = this->transactions[transactionIndex].shadowCopySlots[i];
                     if (!targetSlotPtr->saveFile())
                     {
@@ -188,22 +183,22 @@ namespace ara
 
             core::Result<void> MainKeyStorageProvider::UnsubscribeObserver(KeySlot &slot) noexcept
             {
-                if (!this->removeKeyToSubscribtionList(&slot))
+                if (!this->removeKeyToSubscribtionList(std::shared_ptr<const KeySlot>(&slot)))
                     return core::Result<void>::FromError(CryptoErrc::kInvalidArgument);
                 return {};
             }
 
-            int64_t MainKeyStorageProvider::getKeyIndexInList(const KeySlot *keySlot) const noexcept
+            int64_t MainKeyStorageProvider::getKeyIndexInList(KeySlot::Sptrc keySlot) const noexcept
             {
                 for (size_t i = 0; i < this->subscribedKeySlots.size(); i++)
                 {
-                    if (this->subscribedKeySlots.at(i) == keySlot)
+                    if (this->subscribedKeySlots[i] == keySlot)
                         return (int64_t)i;
                 }
                 return -1;
             }
 
-            bool MainKeyStorageProvider::addKeyToSubscribtionList(const KeySlot *keySlot) noexcept
+            bool MainKeyStorageProvider::addKeyToSubscribtionList(KeySlot::Sptrc keySlot) noexcept
             {
                 if (!this->observer)
                     return false;
@@ -212,7 +207,7 @@ namespace ara
                 return true;
             }
 
-            bool MainKeyStorageProvider::removeKeyToSubscribtionList(const KeySlot *keySlot) noexcept
+            bool MainKeyStorageProvider::removeKeyToSubscribtionList(KeySlot::Sptrc keySlot) noexcept
             {
                 int64_t keyIndex = getKeyIndexInList(keySlot);
                 if (keyIndex == -1)
@@ -221,7 +216,7 @@ namespace ara
                 return true;
             }
 
-            bool MainKeyStorageProvider::isSlotPendingTransaction(const KeySlot *keySlot) const noexcept
+            bool MainKeyStorageProvider::isSlotPendingTransaction(KeySlot::Sptrc keySlot) const noexcept
             {
                 for (size_t i = 0; i < this->transactions.size(); i++)
                 {
@@ -248,6 +243,16 @@ namespace ara
             // TODO
             void MainKeyStorageProvider::updateManifest(core::InstanceSpecifier iSpecify, CryptoAlgId algId, AllowedUsageFlags allowedUsageFlags, CryptoObjectType objectType, bool isExportable) const noexcept
             {
+            }
+
+            MainKeyStorageProvider::Sptr MainKeyStorageProvider::getInstance() noexcept
+            {
+                if (!MainKeyStorageProvider::instance)
+                {
+                    MainKeyStorageProvider *ptr = new MainKeyStorageProvider();
+                    MainKeyStorageProvider::instance = std::shared_ptr<MainKeyStorageProvider>(ptr);
+                }
+                return MainKeyStorageProvider::instance;
             }
 
         }

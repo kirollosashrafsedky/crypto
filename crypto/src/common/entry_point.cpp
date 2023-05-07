@@ -7,25 +7,25 @@ namespace ara
     namespace crypto
     {
 
-        cryp::CryptoProvider::Uptr LoadCryptoProvider(const core::InstanceSpecifier &iSpecify) noexcept
+        cryp::CryptoProvider::Sptr LoadCryptoProvider(const core::InstanceSpecifier &iSpecify) noexcept
         {
-            cryp::CryptoProvider::Uptr ptr;
+            cryp::CryptoProvider::Sptr ptr;
             if (iSpecify.ToString() == CRYPTOPP_CRYPTO_PROVIDER)
             {
-                ptr = std::make_unique<cryp::internal::CryptoppCryptoProvider>();
+                ptr = cryp::internal::CryptoppCryptoProvider::getInstance();
             }
 
             // default cryptoProvider
-            ptr = std::make_unique<cryp::internal::CryptoppCryptoProvider>();
+            ptr = cryp::internal::CryptoppCryptoProvider::getInstance();
             return ptr;
         }
 
-        keys::KeyStorageProvider::Uptr LoadKeyStorageProvider() noexcept
+        keys::KeyStorageProvider::Sptr LoadKeyStorageProvider() noexcept
         {
-            return std::make_unique<keys::internal::MainKeyStorageProvider>();
+            return keys::internal::MainKeyStorageProvider::getInstance();
         }
 
-        // x509::X509Provider::Uptr LoadX509Provider() noexcept
+        // x509::X509Provider::Sptr LoadX509Provider() noexcept
         // {
         // }
 

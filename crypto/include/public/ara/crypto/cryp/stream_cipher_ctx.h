@@ -21,7 +21,7 @@ namespace ara
             class StreamCipherCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<StreamCipherCtx>;
+                using Sptr = std::shared_ptr<StreamCipherCtx>;
 
                 virtual std::size_t CountBytesInCache() const noexcept = 0;
 
@@ -34,7 +34,7 @@ namespace ara
                 template <typename Alloc = std::allocator<std::uint8_t>>
                 core::Result<ByteVector<Alloc>> FinishBytes(ReadOnlyMemRegion in) noexcept;
 
-                virtual BlockService::Uptr GetBlockService() const noexcept = 0;
+                virtual BlockService::Sptr GetBlockService() const noexcept = 0;
 
                 virtual bool IsBytewiseMode() const noexcept = 0;
 

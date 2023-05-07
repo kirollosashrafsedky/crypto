@@ -12,7 +12,7 @@ namespace ara
             {
 
                 AesCryptoService::AesCryptoService(const AesSymmetricBlockCipherCtx &aesSymmetricBlockCipherCtx)
-                    : aesSymmetricBlockCipherCtx(aesSymmetricBlockCipherCtx)
+                    : aesSymmetricBlockCipherCtx(&aesSymmetricBlockCipherCtx)
                 {
                 }
 
@@ -21,7 +21,6 @@ namespace ara
                     return AES_DATA_BLOCK_SIZE;
                 }
 
-                // TODO
                 std::size_t AesCryptoService::GetMaxInputSize(bool suppressPadding) const noexcept
                 {
                     // remove compiler warning
@@ -30,7 +29,6 @@ namespace ara
                     return this->GetBlockSize();
                 }
 
-                // TODO
                 std::size_t AesCryptoService::GetMaxOutputSize(bool suppressPadding) const noexcept
                 {
                     // remove compiler warning
@@ -41,26 +39,23 @@ namespace ara
 
                 std::size_t AesCryptoService::GetActualKeyBitLength() const noexcept
                 {
-                    if (this->aesSymmetricBlockCipherCtx.IsInitialized())
-                        return this->aesSymmetricBlockCipherCtx.getKey()->getKeyData().size();
+                    if (this->aesSymmetricBlockCipherCtx->IsInitialized())
+                        return this->aesSymmetricBlockCipherCtx->getKey()->getKeyData().size();
                     return 0;
                 }
 
                 CryptoObjectUid AesCryptoService::GetActualKeyCOUID() const noexcept
                 {
-                    if (this->aesSymmetricBlockCipherCtx.IsInitialized())
-                        return this->aesSymmetricBlockCipherCtx.getKey()->GetObjectId().mCouid;
+                    if (this->aesSymmetricBlockCipherCtx->IsInitialized())
+                        return this->aesSymmetricBlockCipherCtx->getKey()->GetObjectId().mCouid;
                     CryptoObjectUid nilObjectUid;
-                    nilObjectUid.mGeneratorUid.mQwordLs = 0;
-                    nilObjectUid.mGeneratorUid.mQwordMs = 0;
-                    nilObjectUid.mVersionStamp = 0;
                     return nilObjectUid;
                 }
 
                 AllowedUsageFlags AesCryptoService::GetAllowedUsage() const noexcept
                 {
-                    if (this->aesSymmetricBlockCipherCtx.IsInitialized())
-                        return this->aesSymmetricBlockCipherCtx.getKey()->GetAllowedUsage();
+                    if (this->aesSymmetricBlockCipherCtx->IsInitialized())
+                        return this->aesSymmetricBlockCipherCtx->getKey()->GetAllowedUsage();
                     return 0;
                 }
 
@@ -81,7 +76,7 @@ namespace ara
 
                 bool AesCryptoService::IsKeyAvailable() const noexcept
                 {
-                    return this->aesSymmetricBlockCipherCtx.IsInitialized();
+                    return this->aesSymmetricBlockCipherCtx->IsInitialized();
                 }
 
             }

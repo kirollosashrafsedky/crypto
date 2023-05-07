@@ -12,7 +12,7 @@ namespace ara
         {
             struct KeySlotContentProps
             {
-                using Uptr = std::unique_ptr<KeySlotContentProps>;
+                using Sptr = std::shared_ptr<KeySlotContentProps>;
 
                 CryptoAlgId mAlgId;
 

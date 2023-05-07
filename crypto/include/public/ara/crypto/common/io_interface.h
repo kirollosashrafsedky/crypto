@@ -12,9 +12,9 @@ namespace ara
         class IOInterface
         {
         public:
-            using Uptr = std::unique_ptr<IOInterface>;
+            using Sptr = std::shared_ptr<IOInterface>;
 
-            using Uptrc = std::unique_ptr<const IOInterface>;
+            using Sptrc = std::shared_ptr<const IOInterface>;
 
             virtual ~IOInterface() noexcept = default;
 

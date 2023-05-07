@@ -11,7 +11,7 @@ namespace ara
         {
             struct KeySlotPrototypeProps
             {
-                using Uptr = std::unique_ptr<KeySlotPrototypeProps>;
+                using Sptr = std::shared_ptr<KeySlotPrototypeProps>;
 
                 bool mAllocateSpareSlot;
 

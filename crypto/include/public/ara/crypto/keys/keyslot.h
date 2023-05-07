@@ -19,7 +19,9 @@ namespace ara
             class KeySlot
             {
             public:
-                using Uptr = std::unique_ptr<KeySlot>;
+                using Sptr = std::shared_ptr<KeySlot>;
+
+                using Sptrc = std::shared_ptr<const KeySlot>;
 
                 virtual core::Result<void> Clear() noexcept = 0;
 
@@ -27,13 +29,13 @@ namespace ara
 
                 virtual core::Result<KeySlotContentProps> GetContentProps() const noexcept = 0;
 
-                virtual core::Result<cryp::CryptoProvider::Uptr> MyProvider() const noexcept = 0;
+                virtual core::Result<cryp::CryptoProvider::Sptrc> MyProvider() const noexcept = 0;
 
                 virtual core::Result<KeySlotPrototypeProps> GetPrototypedProps() const noexcept = 0;
 
                 virtual bool IsEmpty() const noexcept = 0;
 
-                virtual core::Result<IOInterface::Uptr> Open(bool subscribeForUpdates = false, bool writeable = false) noexcept = 0;
+                virtual core::Result<IOInterface::Sptr> Open(bool subscribeForUpdates = false, bool writeable = false) noexcept = 0;
 
                 virtual core::Result<void> SaveCopy(const IOInterface &container) noexcept = 0;
 

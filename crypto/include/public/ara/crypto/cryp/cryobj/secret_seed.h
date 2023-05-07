@@ -14,12 +14,12 @@ namespace ara
             class SecretSeed : public RestrictedUseObject
             {
             public:
-                using Uptrc = std::unique_ptr<const SecretSeed>;
-                using Uptr = std::unique_ptr<SecretSeed>;
+                using Sptrc = std::shared_ptr<const SecretSeed>;
+                using Sptr = std::shared_ptr<SecretSeed>;
 
                 static const CryptoObjectType kObjectType = CryptoObjectType::kSecretSeed;
 
-                virtual core::Result<SecretSeed::Uptr> Clone(ReadOnlyMemRegion xorDelta = ReadOnlyMemRegion()) const noexcept = 0;
+                virtual core::Result<SecretSeed::Sptr> Clone(ReadOnlyMemRegion xorDelta = ReadOnlyMemRegion()) const noexcept = 0;
 
                 virtual core::Result<void> JumpFrom(const SecretSeed &from, std::int64_t steps) noexcept = 0;
 

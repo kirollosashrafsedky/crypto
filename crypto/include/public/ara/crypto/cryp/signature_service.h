@@ -14,7 +14,7 @@ namespace ara
             class SignatureService : public ExtensionService
             {
             public:
-                using Uptr = std::unique_ptr<SignatureService>;
+                using Sptr = std::shared_ptr<SignatureService>;
 
                 virtual CryptoPrimitiveId::AlgId GetRequiredHashAlgId() const noexcept = 0;
 

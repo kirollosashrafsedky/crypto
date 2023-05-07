@@ -20,9 +20,9 @@ namespace ara
             class IOInterfaceInternal : public crypto::IOInterface
             {
             public:
-                using Uptr = std::unique_ptr<IOInterfaceInternal>;
+                using Sptr = std::shared_ptr<IOInterfaceInternal>;
 
-                using Uptrc = std::unique_ptr<const IOInterfaceInternal>;
+                using Sptrc = std::shared_ptr<const IOInterfaceInternal>;
 
                 virtual core::Vector<core::Byte> getKeyMaterial() const noexcept = 0;
 
@@ -38,12 +38,12 @@ namespace ara
 
                 virtual void setExportable(bool isExportable) const noexcept = 0;
 
-                virtual cryp::CryptoProvider const *getProvider() const noexcept = 0;
+                virtual std::shared_ptr<const cryp::CryptoProvider> getProvider() const noexcept = 0;
 
-                virtual void setProvider(crypto::cryp::CryptoProvider const *cryptoProvider) noexcept = 0;
+                virtual void setProvider(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider) noexcept = 0;
             };
         }
     }
-
 }
+
 #endif /* _IO_INTERFACE_INTERNAL_H_ */

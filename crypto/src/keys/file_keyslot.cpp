@@ -12,9 +12,9 @@ namespace ara
         {
             using namespace internal;
 
-            FileKeySlot::FileKeySlot(const core::InstanceSpecifier &iSpecify, MainKeyStorageProvider *keyStorageProvider, cryp::CryptoProvider const *cryptoProvider, const KeySlotPrototypeProps &keySlotPrototypeProps, const std::string &fileName)
+            FileKeySlot::FileKeySlot(const core::InstanceSpecifier &iSpecify, std::shared_ptr<MainKeyStorageProvider> keyStorageProvider, std::shared_ptr<const cryp::CryptoProvider> cryptoProvider, const KeySlotPrototypeProps &keySlotPrototypeProps, const std::string &fileName)
                 : iSpecify(iSpecify), keyStorageProvider(keyStorageProvider), cryptoProvider(cryptoProvider),
-                  keySlotPrototypeProps(keySlotPrototypeProps), fileIoInterface(this),
+                  keySlotPrototypeProps(keySlotPrototypeProps), fileIoInterface(std::make_shared<crypto::internal::FileIOInterface>(*this)),
                   isOpened(false), isWritable(false), isModified(false), fileName(fileName)
             {
             }
@@ -62,30 +62,15 @@ namespace ara
                 return core::Result<KeySlotContentProps>::FromValue(this->keySlotContentProps);
             }
 
-            core::Result<KeySlotContentProps *> FileKeySlot::GetContentPropsUpdate() noexcept
+            KeySlotContentProps &FileKeySlot::GetContentPropsUpdate() noexcept
             {
-                if (this->isOpened && this->isWritable)
-                {
-                    this->isModified = true;
-                    return core::Result<KeySlotContentProps *>::FromValue(&this->keySlotContentProps);
-                }
-                return core::Result<KeySlotContentProps *>::FromError(CryptoErrc::kUnreservedResource);
+                this->isModified = true;
+                return this->keySlotContentProps;
             }
 
-            core::Result<cryp::CryptoProvider::Uptr> FileKeySlot::MyProvider() const noexcept
+            core::Result<cryp::CryptoProvider::Sptrc> FileKeySlot::MyProvider() const noexcept
             {
-                cryp::CryptoProvider::Uptr ptr;
-                // TODO
-                // if (manifest.provider == CryptoppCryptoProvider)
-                if (true)
-                {
-                    ptr = std::make_unique<cryp::internal::CryptoppCryptoProvider>();
-                    *ptr = *this->cryptoProvider;
-                }
-                // default cryptoProvider
-                const core::InstanceSpecifier iSpecify(DEFAULT_PROVIDER_INSTANCE_SPECIFIER);
-                ptr = LoadCryptoProvider(iSpecify);
-                return core::Result<cryp::CryptoProvider::Uptr>::FromValue(std::move(ptr));
+                return core::Result<cryp::CryptoProvider::Sptrc>::FromValue(this->cryptoProvider);
             }
 
             core::Result<KeySlotPrototypeProps> FileKeySlot::GetPrototypedProps() const noexcept
@@ -99,23 +84,23 @@ namespace ara
             }
 
             // TODO
-            core::Result<IOInterface::Uptr> FileKeySlot::Open(bool subscribeForUpdates, bool writeable) noexcept
+            core::Result<IOInterface::Sptr> FileKeySlot::Open(bool subscribeForUpdates, bool writeable) noexcept
             {
                 if (subscribeForUpdates)
                 {
-                    if (!this->keyStorageProvider->addKeyToSubscribtionList(this))
+                    if (!this->keyStorageProvider->addKeyToSubscribtionList(std::shared_ptr<FileKeySlot>(this)))
                     {
-                        return core::Result<IOInterface::Uptr>::FromError(CryptoErrc::kInvalidUsageOrder);
+                        return core::Result<IOInterface::Sptr>::FromError(CryptoErrc::kInvalidUsageOrder);
                     }
                 }
-                if (this->isOpened && this->isWritable && (writeable || this->keyStorageProvider->isSlotPendingTransaction(this)))
+                if (this->isOpened && this->isWritable && (writeable || this->keyStorageProvider->isSlotPendingTransaction(std::shared_ptr<FileKeySlot>(this))))
                 {
-                    return core::Result<IOInterface::Uptr>::FromError(CryptoErrc::kBusyResource);
+                    return core::Result<IOInterface::Sptr>::FromError(CryptoErrc::kBusyResource);
                 }
 
                 if (this->isOpened && this->isModified)
                 {
-                    return core::Result<IOInterface::Uptr>::FromError(CryptoErrc::kModifiedResource);
+                    return core::Result<IOInterface::Sptr>::FromError(CryptoErrc::kModifiedResource);
                 }
 
                 this->keySlotContentProps.isExportable = this->keySlotPrototypeProps.mExportAllowed;
@@ -141,15 +126,13 @@ namespace ara
                 this->isWritable = writeable;
                 this->isOpened = true;
 
-                IOInterface::Uptr ioInterface = std::make_unique<crypto::internal::FileIOInterface>(this);
-                *ioInterface = this->fileIoInterface;
-                return core::Result<IOInterface::Uptr>::FromValue(std::move(ioInterface));
+                return core::Result<IOInterface::Sptr>::FromValue(this->fileIoInterface);
             }
 
             core::Result<void> FileKeySlot::SaveCopy(const IOInterface &container) noexcept
             {
-                crypto::internal::IOInterfaceInternal const *containerPtr = static_cast<const crypto::internal::IOInterfaceInternal *>(&container);
-                if (containerPtr->IsObjectSession() || containerPtr->getProvider()->getSpecifier() != this->cryptoProvider->getSpecifier())
+                crypto::internal::IOInterfaceInternal const *containerPtr = dynamic_cast<crypto::internal::IOInterfaceInternal const *>(&container);
+                if (containerPtr->IsObjectSession() || containerPtr->getProvider() != this->cryptoProvider)
                 {
                     return core::Result<void>::FromError(CryptoErrc::kIncompatibleObject);
                 }
@@ -203,7 +186,7 @@ namespace ara
                 return this->isWritable;
             }
 
-            core::Result<void> FileKeySlot::setProvider(cryp::CryptoProvider const *cryptoProvider) noexcept
+            core::Result<void> FileKeySlot::setProvider(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider) noexcept
             {
                 if (!this->isOpened || !this->isWritable)
                 {

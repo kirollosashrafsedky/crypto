@@ -13,7 +13,7 @@ namespace ara
             class KeyStorageProvider
             {
             public:
-                using Uptr = std::unique_ptr<KeyStorageProvider>;
+                using Sptr = std::shared_ptr<KeyStorageProvider>;
 
                 virtual core::Result<TransactionId> BeginTransaction(const TransactionScope &targetSlots) noexcept = 0;
 
@@ -21,11 +21,11 @@ namespace ara
 
                 virtual ~KeyStorageProvider() noexcept = default;
 
-                virtual UpdatesObserver::Uptr GetRegisteredObserver() const noexcept = 0;
+                virtual UpdatesObserver::Sptr GetRegisteredObserver() const noexcept = 0;
 
-                virtual core::Result<KeySlot::Uptr> LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept = 0;
+                virtual core::Result<KeySlot::Sptr> LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept = 0;
 
-                virtual UpdatesObserver::Uptr RegisterObserver(UpdatesObserver::Uptr observer = nullptr) noexcept = 0;
+                virtual UpdatesObserver::Sptr RegisterObserver(UpdatesObserver::Sptr observer = nullptr) noexcept = 0;
 
                 virtual core::Result<void> RollbackTransaction(TransactionId id) noexcept = 0;
 

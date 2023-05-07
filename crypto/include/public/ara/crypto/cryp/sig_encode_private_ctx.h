@@ -15,9 +15,9 @@ namespace ara
             class SigEncodePrivateCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<SigEncodePrivateCtx>;
+                using Sptr = std::shared_ptr<SigEncodePrivateCtx>;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual std::size_t GetMaxInputSize(bool suppressPadding = false) const noexcept = 0;
 

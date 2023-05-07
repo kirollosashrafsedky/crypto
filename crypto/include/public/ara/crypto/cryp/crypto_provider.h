@@ -36,53 +36,55 @@ namespace ara
             public:
                 using AlgId = CryptoPrimitiveId::AlgId;
 
-                using Uptr = std::unique_ptr<CryptoProvider>;
+                using Sptr = std::shared_ptr<CryptoProvider>;
 
-                virtual core::Result<VolatileTrustedContainer::Uptr> AllocVolatileContainer(std::size_t capacity = 0) noexcept = 0;
+                using Sptrc = std::shared_ptr<const CryptoProvider>;
 
-                virtual core::Result<VolatileTrustedContainer::Uptr> AllocVolatileContainer(std::pair<AlgId, CryptoObjectType> theObjectDef) noexcept = 0;
+                virtual core::Result<VolatileTrustedContainer::Sptr> AllocVolatileContainer(std::size_t capacity = 0) noexcept = 0;
+
+                virtual core::Result<VolatileTrustedContainer::Sptr> AllocVolatileContainer(std::pair<AlgId, CryptoObjectType> theObjectDef) noexcept = 0;
 
                 virtual AlgId ConvertToAlgId(core::StringView primitiveName) const noexcept = 0;
 
                 virtual core::Result<core::String> ConvertToAlgName(AlgId algId) const noexcept = 0;
 
-                virtual core::Result<AuthCipherCtx::Uptr> CreateAuthCipherCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<AuthCipherCtx::Sptr> CreateAuthCipherCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<DecryptorPrivateCtx::Uptr> CreateDecryptorPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<DecryptorPrivateCtx::Sptr> CreateDecryptorPrivateCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<EncryptorPublicCtx::Uptr> CreateEncryptorPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<EncryptorPublicCtx::Sptr> CreateEncryptorPublicCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<Signature::Uptrc> CreateHashDigest(AlgId hashAlgId, ReadOnlyMemRegion value) noexcept = 0;
+                virtual core::Result<Signature::Sptrc> CreateHashDigest(AlgId hashAlgId, ReadOnlyMemRegion value) noexcept = 0;
 
-                virtual core::Result<HashFunctionCtx::Uptr> CreateHashFunctionCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<HashFunctionCtx::Sptr> CreateHashFunctionCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<KeyAgreementPrivateCtx::Uptr> CreateKeyAgreementPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyAgreementPrivateCtx::Sptr> CreateKeyAgreementPrivateCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<KeyDecapsulatorPrivateCtx::Uptr> CreateKeyDecapsulatorPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyDecapsulatorPrivateCtx::Sptr> CreateKeyDecapsulatorPrivateCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<KeyDerivationFunctionCtx::Uptr> CreateKeyDerivationFunctionCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyDerivationFunctionCtx::Sptr> CreateKeyDerivationFunctionCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<KeyEncapsulatorPublicCtx::Uptr> CreateKeyEncapsulatorPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<KeyEncapsulatorPublicCtx::Sptr> CreateKeyEncapsulatorPublicCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<MessageAuthnCodeCtx::Uptr> CreateMessageAuthnCodeCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<MessageAuthnCodeCtx::Sptr> CreateMessageAuthnCodeCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<MsgRecoveryPublicCtx::Uptr> CreateMsgRecoveryPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<MsgRecoveryPublicCtx::Sptr> CreateMsgRecoveryPublicCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<RandomGeneratorCtx::Uptr> CreateRandomGeneratorCtx(AlgId algId = kAlgIdDefault, bool initialize = true) noexcept = 0;
+                virtual core::Result<RandomGeneratorCtx::Sptr> CreateRandomGeneratorCtx(AlgId algId = kAlgIdDefault, bool initialize = true) noexcept = 0;
 
-                virtual core::Result<SigEncodePrivateCtx::Uptr> CreateSigEncodePrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<SigEncodePrivateCtx::Sptr> CreateSigEncodePrivateCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<Signature::Uptrc> CreateSignature(AlgId signAlgId, ReadOnlyMemRegion value, const RestrictedUseObject &key, AlgId hashAlgId = kAlgIdNone) noexcept = 0;
+                virtual core::Result<Signature::Sptrc> CreateSignature(AlgId signAlgId, ReadOnlyMemRegion value, const RestrictedUseObject &key, AlgId hashAlgId = kAlgIdNone) noexcept = 0;
 
-                virtual core::Result<SignerPrivateCtx::Uptr> CreateSignerPrivateCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<SignerPrivateCtx::Sptr> CreateSignerPrivateCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<StreamCipherCtx::Uptr> CreateStreamCipherCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<StreamCipherCtx::Sptr> CreateStreamCipherCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<SymmetricBlockCipherCtx::Uptr> CreateSymmetricBlockCipherCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<SymmetricBlockCipherCtx::Sptr> CreateSymmetricBlockCipherCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<SymmetricKeyWrapperCtx::Uptr> CreateSymmetricKeyWrapperCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<SymmetricKeyWrapperCtx::Sptr> CreateSymmetricKeyWrapperCtx(AlgId algId) noexcept = 0;
 
-                virtual core::Result<VerifierPublicCtx::Uptr> CreateVerifierPublicCtx(AlgId algId) noexcept = 0;
+                virtual core::Result<VerifierPublicCtx::Sptr> CreateVerifierPublicCtx(AlgId algId) noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> ExportPublicObject(const IOInterface &container, Serializable::FormatId formatId = Serializable::kFormatDefault) noexcept = 0;
 
@@ -90,11 +92,11 @@ namespace ara
 
                 virtual core::Result<core::Vector<core::Byte>> ExportSecuredObject(const IOInterface &container, SymmetricKeyWrapperCtx &transportContext) noexcept = 0;
 
-                virtual core::Result<PrivateKey::Uptrc> GeneratePrivateKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession = false, bool isExportable = false) noexcept = 0;
+                virtual core::Result<PrivateKey::Sptrc> GeneratePrivateKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession = false, bool isExportable = false) noexcept = 0;
 
-                virtual core::Result<SecretSeed::Uptrc> GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession = true, bool isExportable = false) noexcept = 0;
+                virtual core::Result<SecretSeed::Sptrc> GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession = true, bool isExportable = false) noexcept = 0;
 
-                virtual core::Result<SymmetricKey::Uptrc> GenerateSymmetricKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession = true, bool isExportable = false) noexcept = 0;
+                virtual core::Result<SymmetricKey::Sptrc> GenerateSymmetricKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession = true, bool isExportable = false) noexcept = 0;
 
                 virtual core::Result<std::size_t> GetPayloadStorageSize(CryptoObjectType cryptoObjectType, AlgId algId) const noexcept = 0;
 
@@ -104,15 +106,15 @@ namespace ara
 
                 virtual core::Result<void> ImportSecuredObject(IOInterface &container, ReadOnlyMemRegion serialized, SymmetricKeyWrapperCtx &transportContext, bool isExportable = false, CryptoObjectType expectedObject = CryptoObjectType::kUndefined) noexcept = 0;
 
-                virtual core::Result<CryptoObject::Uptrc> LoadObject(const IOInterface &container) noexcept = 0;
+                virtual core::Result<CryptoObject::Sptrc> LoadObject(const IOInterface &container) noexcept = 0;
 
-                virtual core::Result<PrivateKey::Uptrc> LoadPrivateKey(const IOInterface &container) noexcept = 0;
+                virtual core::Result<PrivateKey::Sptrc> LoadPrivateKey(const IOInterface &container) noexcept = 0;
 
-                virtual core::Result<PublicKey::Uptrc> LoadPublicKey(const IOInterface &container) noexcept = 0;
+                virtual core::Result<PublicKey::Sptrc> LoadPublicKey(const IOInterface &container) noexcept = 0;
 
-                virtual core::Result<SecretSeed::Uptrc> LoadSecretSeed(const IOInterface &container) noexcept = 0;
+                virtual core::Result<SecretSeed::Sptrc> LoadSecretSeed(const IOInterface &container) noexcept = 0;
 
-                virtual core::Result<SymmetricKey::Uptrc> LoadSymmetricKey(const IOInterface &container) noexcept = 0;
+                virtual core::Result<SymmetricKey::Sptrc> LoadSymmetricKey(const IOInterface &container) noexcept = 0;
 
                 virtual core::InstanceSpecifier getSpecifier() const noexcept = 0;
 

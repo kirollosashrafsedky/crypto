@@ -16,9 +16,9 @@ namespace ara
             class MsgRecoveryPublicCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<MsgRecoveryPublicCtx>;
+                using Sptr = std::shared_ptr<MsgRecoveryPublicCtx>;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual std::size_t GetMaxInputSize(bool suppressPadding = false) const noexcept = 0;
 

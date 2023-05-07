@@ -2,7 +2,7 @@
 #define _AES_SYMMETRIC_KEY_H_
 
 #include "ara/crypto/cryp/cryobj/symmetric_key.h"
-#include "ara/crypto/cryp/cryobj/aes_key_primitive_id.h"
+#include "ara/crypto/cryp/cryobj/crypto_primitive_id_internal.h"
 #include <cryptopp/aes.h>
 
 namespace ara
@@ -18,15 +18,17 @@ namespace ara
                 class AesSymmetricKey : public SymmetricKey
                 {
                 public:
-                    using Uptrc = std::unique_ptr<const AesSymmetricKey>;
+                    using Sptrc = std::shared_ptr<const AesSymmetricKey>;
 
-                    using Uptr = std::unique_ptr<AesSymmetricKey>;
+                    using Sptr = std::shared_ptr<AesSymmetricKey>;
 
-                    AesSymmetricKey(COIdentifier identifier, CryptoPP::SecByteBlock keyData, AllowedUsageFlags allowedUsageFlags = 0, bool isSession = false, bool isExportable = false);
+                    AesSymmetricKey() = default;
+
+                    AesSymmetricKey(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider, COIdentifier identifier, CryptoPP::SecByteBlock keyData, AllowedUsageFlags allowedUsageFlags = 0, bool isSession = false, bool isExportable = false);
 
                     Usage GetAllowedUsage() const noexcept override;
 
-                    CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept override;
+                    CryptoPrimitiveId::Sptrc GetCryptoPrimitiveId() const noexcept override;
 
                     COIdentifier GetObjectId() const noexcept override;
 
@@ -42,6 +44,8 @@ namespace ara
 
                     const CryptoPP::SecByteBlock &getKeyData() const;
 
+                    std::shared_ptr<const cryp::CryptoProvider> getProvider() const noexcept;
+
                 private:
                     COIdentifier identifier;
 
@@ -51,12 +55,11 @@ namespace ara
 
                     bool isExportable;
 
-                    std::shared_ptr<AesKeyPrimitiveId> primitiveId;
+                    std::shared_ptr<const CryptoPrimitiveIdInternal> primitiveId;
 
                     CryptoPP::SecByteBlock keyData;
 
-                    // TODO: reference
-                    const CryptoProvider *cryptoProvider;
+                    std::shared_ptr<const cryp::CryptoProvider> cryptoProvider;
                 };
             }
         }

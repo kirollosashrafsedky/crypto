@@ -16,13 +16,13 @@ namespace ara
         {
             using namespace internal;
 
-            AesSymmetricBlockCipherCtx::AesSymmetricBlockCipherCtx(CryptoProvider &cryptoProvider)
+            AesSymmetricBlockCipherCtx::AesSymmetricBlockCipherCtx(std::shared_ptr<const CryptoProvider> cryptoProvider)
                 : cryptoProvider(cryptoProvider), transform(CryptoTransform::kEncrypt),
                   isSetKeyCalled(false), aesCryptoService(std::make_shared<AesCryptoService>(*this))
             {
             }
 
-            CryptoPrimitiveId::Uptr AesSymmetricBlockCipherCtx::GetCryptoPrimitiveId() const noexcept
+            CryptoPrimitiveId::Sptrc AesSymmetricBlockCipherCtx::GetCryptoPrimitiveId() const noexcept
             {
                 if (IsInitialized())
                     return this->key->GetCryptoPrimitiveId();
@@ -37,16 +37,14 @@ namespace ara
                     return false;
             }
 
-            CryptoProvider &AesSymmetricBlockCipherCtx::MyProvider() const noexcept
+            const CryptoProvider &AesSymmetricBlockCipherCtx::MyProvider() const noexcept
             {
-                return this->cryptoProvider;
+                return *this->cryptoProvider;
             }
 
-            CryptoService::Uptr AesSymmetricBlockCipherCtx::GetCryptoService() const noexcept
+            CryptoService::Sptr AesSymmetricBlockCipherCtx::GetCryptoService() const noexcept
             {
-                CryptoService::Uptr ptr = std::make_unique<AesCryptoService>(*this);
-                *ptr = *this->aesCryptoService.get();
-                return ptr;
+                return this->aesCryptoService;
             }
 
             core::Result<CryptoTransform> AesSymmetricBlockCipherCtx::GetTransformation() const noexcept
@@ -160,12 +158,23 @@ namespace ara
                 return {};
             }
 
-            // TODO: errors
             core::Result<void> AesSymmetricBlockCipherCtx::SetKey(const SymmetricKey &key, CryptoTransform transform) noexcept
             {
-                AesSymmetricKey *aesKey = new AesSymmetricKey(key.GetObjectId(), (dynamic_cast<const AesSymmetricKey &>(key)).getKeyData());
-                *aesKey = dynamic_cast<const AesSymmetricKey &>(key);
-                this->key = std::shared_ptr<const AesSymmetricKey>(aesKey);
+                const AesSymmetricKey &aesKey = dynamic_cast<const AesSymmetricKey &>(key);
+                if (this->cryptoProvider.get() != aesKey.getProvider().get())
+                {
+                    return core::Result<void>::FromError(CryptoErrc::kIncompatibleObject);
+                }
+                if ((transform != CryptoTransform::kDecrypt && transform != CryptoTransform::kEncrypt) ||
+                    (transform == CryptoTransform::kDecrypt && (aesKey.GetAllowedUsage() & kAllowDataDecryption == 0)) ||
+                    (transform == CryptoTransform::kEncrypt && (aesKey.GetAllowedUsage() & kAllowDataEncryption == 0)))
+                {
+                    return core::Result<void>::FromError(CryptoErrc::kUsageViolation);
+                }
+
+                AesSymmetricKey *aesKeyPtr = new AesSymmetricKey();
+                *aesKeyPtr = aesKey;
+                this->key = std::shared_ptr<const AesSymmetricKey>(aesKeyPtr);
                 this->transform = transform;
                 this->isSetKeyCalled = true;
                 return {};

@@ -19,9 +19,11 @@ namespace ara
                 class FileKeySlot : public KeySlot
                 {
                 public:
-                    using Uptr = std::unique_ptr<FileKeySlot>;
+                    using Sptr = std::shared_ptr<FileKeySlot>;
 
-                    FileKeySlot(const core::InstanceSpecifier &iSpecify, MainKeyStorageProvider *keyStorageProvider, cryp::CryptoProvider const *cryptoProvider, const KeySlotPrototypeProps &keySlotPrototypeProps, const std::string &fileName);
+                    using Sptrc = std::shared_ptr<const FileKeySlot>;
+
+                    FileKeySlot(const core::InstanceSpecifier &iSpecify, std::shared_ptr<MainKeyStorageProvider> keyStorageProvider, std::shared_ptr<const cryp::CryptoProvider> cryptoProvider, const KeySlotPrototypeProps &keySlotPrototypeProps, const std::string &fileName);
 
                     FileKeySlot(const core::InstanceSpecifier &iSpecify);
 
@@ -31,15 +33,15 @@ namespace ara
 
                     core::Result<KeySlotContentProps> GetContentProps() const noexcept override;
 
-                    core::Result<KeySlotContentProps *> GetContentPropsUpdate() noexcept;
+                    KeySlotContentProps &GetContentPropsUpdate() noexcept;
 
-                    core::Result<cryp::CryptoProvider::Uptr> MyProvider() const noexcept override;
+                    core::Result<cryp::CryptoProvider::Sptrc> MyProvider() const noexcept override;
 
                     core::Result<KeySlotPrototypeProps> GetPrototypedProps() const noexcept override;
 
                     bool IsEmpty() const noexcept override;
 
-                    core::Result<IOInterface::Uptr> Open(bool subscribeForUpdates = false, bool writeable = false) noexcept override;
+                    core::Result<IOInterface::Sptr> Open(bool subscribeForUpdates = false, bool writeable = false) noexcept override;
 
                     core::Result<void> SaveCopy(const IOInterface &container) noexcept override;
 
@@ -51,7 +53,7 @@ namespace ara
 
                     bool IsWritable() const noexcept;
 
-                    core::Result<void> setProvider(const cryp::CryptoProvider *cryptoProvider) noexcept;
+                    core::Result<void> setProvider(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider) noexcept;
 
                     bool saveFile() noexcept;
 
@@ -64,9 +66,9 @@ namespace ara
                 private:
                     core::InstanceSpecifier iSpecify;
 
-                    MainKeyStorageProvider *keyStorageProvider;
+                    std::shared_ptr<MainKeyStorageProvider> keyStorageProvider;
 
-                    cryp::CryptoProvider const *cryptoProvider;
+                    std::shared_ptr<const cryp::CryptoProvider> cryptoProvider;
 
                     KeySlotPrototypeProps keySlotPrototypeProps;
 
@@ -74,7 +76,7 @@ namespace ara
 
                     core::Vector<core::Byte> keyMaterial;
 
-                    crypto::internal::FileIOInterface fileIoInterface;
+                    std::shared_ptr<crypto::internal::FileIOInterface> fileIoInterface;
 
                     bool isOpened;
 

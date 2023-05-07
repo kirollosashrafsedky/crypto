@@ -20,9 +20,9 @@ namespace ara
             class SymmetricBlockCipherCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<SymmetricBlockCipherCtx>;
+                using Sptr = std::shared_ptr<SymmetricBlockCipherCtx>;
 
-                virtual CryptoService::Uptr GetCryptoService() const noexcept = 0;
+                virtual CryptoService::Sptr GetCryptoService() const noexcept = 0;
 
                 virtual core::Result<CryptoTransform> GetTransformation() const noexcept = 0;
 

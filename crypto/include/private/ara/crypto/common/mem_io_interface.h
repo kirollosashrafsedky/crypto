@@ -14,9 +14,9 @@ namespace ara
             class MemIOInterface : public IOInterfaceInternal
             {
             public:
-                using Uptr = std::unique_ptr<MemIOInterface>;
+                using Sptr = std::shared_ptr<MemIOInterface>;
 
-                using Uptrc = std::unique_ptr<const MemIOInterface>;
+                using Sptrc = std::shared_ptr<const MemIOInterface>;
 
                 MemIOInterface(MemTrustedContainer &memTrustedContainer);
 
@@ -58,9 +58,9 @@ namespace ara
 
                 void setExportable(bool isExportable) const noexcept override;
 
-                cryp::CryptoProvider const *getProvider() const noexcept override;
+                std::shared_ptr<const cryp::CryptoProvider> getProvider() const noexcept override;
 
-                void setProvider(cryp::CryptoProvider const *cryptoProvider) noexcept override;
+                void setProvider(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider) noexcept override;
 
                 CryptoObjectUid GetDependantObjectId() const noexcept;
 
@@ -71,7 +71,7 @@ namespace ara
                 void SetDependantObjectType(CryptoObjectType dependantObjectType) noexcept;
 
             private:
-                MemTrustedContainer &memTrustedContainer;
+                MemTrustedContainer *memTrustedContainer;
             };
         }
     }

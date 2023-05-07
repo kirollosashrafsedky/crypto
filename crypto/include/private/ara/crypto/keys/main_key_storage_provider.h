@@ -16,41 +16,45 @@ namespace ara
                 class MainKeyStorageProvider : public KeyStorageProvider
                 {
                 public:
-                    using Uptr = std::unique_ptr<MainKeyStorageProvider>;
+                    using Sptr = std::shared_ptr<MainKeyStorageProvider>;
 
+                private:
                     MainKeyStorageProvider();
 
+                public:
                     core::Result<TransactionId> BeginTransaction(const TransactionScope &targetSlots) noexcept override;
 
                     core::Result<void> CommitTransaction(TransactionId id) noexcept override;
 
-                    UpdatesObserver::Uptr GetRegisteredObserver() const noexcept override;
+                    UpdatesObserver::Sptr GetRegisteredObserver() const noexcept override;
 
-                    core::Result<KeySlot::Uptr> LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept override;
+                    core::Result<KeySlot::Sptr> LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept override;
 
-                    UpdatesObserver::Uptr RegisterObserver(UpdatesObserver::Uptr observer = nullptr) noexcept override;
+                    UpdatesObserver::Sptr RegisterObserver(UpdatesObserver::Sptr observer = nullptr) noexcept override;
 
                     core::Result<void> RollbackTransaction(TransactionId id) noexcept override;
 
                     core::Result<void> UnsubscribeObserver(KeySlot &slot) noexcept override;
 
-                    bool addKeyToSubscribtionList(const KeySlot *keySlot) noexcept;
+                    bool addKeyToSubscribtionList(KeySlot::Sptrc keySlot) noexcept;
 
-                    bool isSlotPendingTransaction(const KeySlot *keySlot) const noexcept;
+                    bool isSlotPendingTransaction(KeySlot::Sptrc keySlot) const noexcept;
+
+                    static MainKeyStorageProvider::Sptr getInstance() noexcept;
 
                 private:
-                    int64_t getKeyIndexInList(const KeySlot *keySlot) const noexcept;
+                    int64_t getKeyIndexInList(KeySlot::Sptrc keySlot) const noexcept;
 
-                    bool removeKeyToSubscribtionList(const KeySlot *keySlot) noexcept;
+                    bool removeKeyToSubscribtionList(KeySlot::Sptrc keySlot) noexcept;
 
                     int64_t getSlotPendingTransactionIndex(TransactionId id) const noexcept;
 
                     void updateManifest(core::InstanceSpecifier iSpecify, CryptoAlgId algId, AllowedUsageFlags allowedUsageFlags, CryptoObjectType objectType, bool isExportable) const noexcept;
 
                 private:
-                    std::vector<const KeySlot *> subscribedKeySlots;
+                    std::vector<std::shared_ptr<const KeySlot>> subscribedKeySlots;
 
-                    UpdatesObserver::Uptr observer;
+                    UpdatesObserver::Sptr observer;
 
                     struct Transaction
                     {
@@ -66,6 +70,8 @@ namespace ara
                     std::uint64_t currentTransactionId;
 
                     const std::string manifestFileName = "keySlotsManifest.json";
+
+                    static MainKeyStorageProvider::Sptr instance;
                 };
             }
         }

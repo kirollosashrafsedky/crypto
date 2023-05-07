@@ -18,9 +18,9 @@ namespace ara
             class CryptoObject
             {
             public:
-                using Uptrc = std::unique_ptr<const CryptoObject>;
+                using Sptrc = std::shared_ptr<const CryptoObject>;
 
-                using Uptr = std::unique_ptr<CryptoObject>;
+                using Sptr = std::shared_ptr<CryptoObject>;
 
                 struct COIdentifier
                 {
@@ -31,20 +31,20 @@ namespace ara
                 virtual ~CryptoObject() noexcept = default;
 
                 template <class ConcreteObject>
-                static core::Result<typename ConcreteObject::Uptrc> Downcast(CryptoObject::Uptrc &&object) noexcept
+                static core::Result<typename ConcreteObject::Sptrc> Downcast(CryptoObject::Sptrc &&object) noexcept
                 {
-                    auto derived_ptr = dynamic_cast<const ConcreteObject *>(object.get());
-                    if (!derived_ptr)
-                    {
-                        return core::Result<typename ConcreteObject::Uptrc>::FromError(CryptoErrc::kInvalidArgument);
-                    }
+                    // auto derived_ptr = dynamic_cast<const ConcreteObject *>(object.get());
+                    // if (!derived_ptr)
+                    // {
+                    //     return core::Result<typename ConcreteObject::Sptrc>::FromError(CryptoErrc::kInvalidArgument);
+                    // }
 
-                    auto derived_object = std::unique_ptr<const ConcreteObject>(derived_ptr);
-                    object.release();
-                    return core::Result<typename ConcreteObject::Uptrc>::FromValue(std::move(derived_object));
+                    // auto derived_object = std::shared_ptr<const ConcreteObject>(derived_ptr);
+                    // object.release();
+                    // return core::Result<typename ConcreteObject::Sptrc>::FromValue(std::move(derived_object));
                 }
 
-                virtual CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept = 0;
+                virtual CryptoPrimitiveId::Sptrc GetCryptoPrimitiveId() const noexcept = 0;
 
                 virtual COIdentifier GetObjectId() const noexcept = 0;
 

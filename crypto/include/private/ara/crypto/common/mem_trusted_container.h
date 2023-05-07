@@ -21,9 +21,9 @@ namespace ara
             class MemTrustedContainer : public VolatileTrustedContainer
             {
             public:
-                using Uptr = std::unique_ptr<MemTrustedContainer>;
+                using Sptr = std::shared_ptr<MemTrustedContainer>;
 
-                MemTrustedContainer(cryp::CryptoProvider const *cryptoProvider, std::size_t capacity = MEM_TRUSTED_CONTAINER_DEFAULT_CAPACITY);
+                MemTrustedContainer(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider, std::size_t capacity = MEM_TRUSTED_CONTAINER_DEFAULT_CAPACITY);
 
                 IOInterface &GetIOInterface() noexcept override;
 
@@ -31,9 +31,9 @@ namespace ara
 
                 void setKeyMaterial(const core::Vector<core::Byte> &keyMaterial) noexcept;
 
-                const cryp::CryptoProvider &MyProvider() const noexcept;
+                std::shared_ptr<const cryp::CryptoProvider> MyProvider() const noexcept;
 
-                void setMyProvider(cryp::CryptoProvider const *cryptoProvider) noexcept;
+                void setMyProvider(std::shared_ptr<const cryp::CryptoProvider> cryptoProvider) noexcept;
 
                 CryptoAlgId getAlgId() const noexcept;
 
@@ -72,7 +72,7 @@ namespace ara
 
                 MemIOInterface memIoInterface;
 
-                cryp::CryptoProvider const *cryptoProvider;
+                std::shared_ptr<const cryp::CryptoProvider> cryptoProvider;
 
                 CryptoAlgId algId;
 

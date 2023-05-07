@@ -11,7 +11,7 @@ namespace ara
         class VolatileTrustedContainer
         {
         public:
-            using Uptr = std::unique_ptr<VolatileTrustedContainer>;
+            using Sptr = std::shared_ptr<VolatileTrustedContainer>;
 
             virtual ~VolatileTrustedContainer() noexcept = default;
 

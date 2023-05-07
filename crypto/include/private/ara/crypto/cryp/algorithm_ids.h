@@ -1,0 +1,13 @@
+#ifndef _ALGORITHM_IDS_H_
+#define _ALGORITHM_IDS_H_
+
+#include <cryptopp/aes.h>
+
+#define AES_CBC_128_ALG_ID 1
+#define AES_CBC_128_PRIMITIVE_NAME "AES_CBC_128"
+#define AES_CBC_128_PAYLOAD_SIZE CryptoPP::AES::DEFAULT_KEYLENGTH
+
+#define RSA_ALG_ID 1
+#define RSA_PRIMITIVE_NAME "AES_CBC_128"
+
+#endif /* _ALGORITHM_IDS_H_ */

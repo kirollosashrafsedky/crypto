@@ -20,9 +20,9 @@ namespace ara
             class EncryptorPublicCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<EncryptorPublicCtx>;
+                using Sptr = std::shared_ptr<EncryptorPublicCtx>;
 
-                virtual CryptoService::Uptr GetCryptoService() const noexcept = 0;
+                virtual CryptoService::Sptr GetCryptoService() const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> ProcessBlock(ReadOnlyMemRegion in, bool suppressPadding = false) const noexcept = 0;
 

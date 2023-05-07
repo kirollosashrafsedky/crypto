@@ -16,19 +16,19 @@ namespace ara
             class SignerPrivateCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<SignerPrivateCtx>;
+                using Sptr = std::shared_ptr<SignerPrivateCtx>;
 
-                virtual SignatureService::Uptr GetSignatureService() const noexcept = 0;
+                virtual SignatureService::Sptr GetSignatureService() const noexcept = 0;
 
                 virtual core::Result<void> Reset() noexcept = 0;
 
                 virtual core::Result<void> SetKey(const PrivateKey &key) noexcept = 0;
 
-                virtual core::Result<Signature::Uptrc> SignPreHashed(const HashFunctionCtx &hashFn, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept = 0;
+                virtual core::Result<Signature::Sptrc> SignPreHashed(const HashFunctionCtx &hashFn, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> Sign(ReadOnlyMemRegion value, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept = 0;
 
-                virtual core::Result<Signature::Uptrc> SignPreHashed(AlgId hashAlgId, ReadOnlyMemRegion hashValue, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept = 0;
+                virtual core::Result<Signature::Sptrc> SignPreHashed(AlgId hashAlgId, ReadOnlyMemRegion hashValue, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
                 core::Result<ByteVector<Alloc>> Sign(ReadOnlyMemRegion value, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept;

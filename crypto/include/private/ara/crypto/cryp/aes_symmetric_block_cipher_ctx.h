@@ -17,17 +17,17 @@ namespace ara
                 class AesSymmetricBlockCipherCtx : public SymmetricBlockCipherCtx
                 {
                 public:
-                    using Uptr = std::unique_ptr<AesSymmetricBlockCipherCtx>;
+                    using Sptr = std::shared_ptr<AesSymmetricBlockCipherCtx>;
 
-                    AesSymmetricBlockCipherCtx(CryptoProvider &cryptoProvider);
+                    AesSymmetricBlockCipherCtx(std::shared_ptr<const CryptoProvider> cryptoProvider);
 
-                    CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept override;
+                    CryptoPrimitiveId::Sptrc GetCryptoPrimitiveId() const noexcept override;
 
                     bool IsInitialized() const noexcept override;
 
-                    CryptoProvider &MyProvider() const noexcept override;
+                    const CryptoProvider &MyProvider() const noexcept override;
 
-                    CryptoService::Uptr GetCryptoService() const noexcept override;
+                    CryptoService::Sptr GetCryptoService() const noexcept override;
 
                     core::Result<CryptoTransform> GetTransformation() const noexcept override;
 
@@ -42,7 +42,7 @@ namespace ara
                     std::shared_ptr<const AesSymmetricKey> getKey() const noexcept;
 
                 private:
-                    CryptoProvider &cryptoProvider;
+                    std::shared_ptr<const CryptoProvider> cryptoProvider;
 
                     std::shared_ptr<const AesSymmetricKey> key;
 

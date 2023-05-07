@@ -16,9 +16,9 @@ namespace ara
             class VerifierPublicCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<VerifierPublicCtx>;
+                using Sptr = std::shared_ptr<VerifierPublicCtx>;
 
-                virtual SignatureService::Uptr GetSignatureService() const noexcept = 0;
+                virtual SignatureService::Sptr GetSignatureService() const noexcept = 0;
 
                 virtual core::Result<void> Reset() noexcept = 0;
 

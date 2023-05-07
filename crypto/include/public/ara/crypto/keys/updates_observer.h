@@ -12,7 +12,7 @@ namespace ara
             class UpdatesObserver
             {
             public:
-                using Uptr = std::unique_ptr<UpdatesObserver>;
+                using Sptr = std::shared_ptr<UpdatesObserver>;
 
                 virtual ~UpdatesObserver() noexcept = default;
 

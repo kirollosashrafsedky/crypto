@@ -17,7 +17,7 @@ namespace ara
             class DigestService : public BlockService
             {
             public:
-                using Uptr = std::unique_ptr<DigestService>;
+                using Sptr = std::shared_ptr<DigestService>;
 
                 virtual core::Result<bool> Compare(ReadOnlyMemRegion expected, std::size_t offset = 0) const noexcept = 0;
 

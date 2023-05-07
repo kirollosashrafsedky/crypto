@@ -20,9 +20,9 @@ namespace ara
             class DecryptorPrivateCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<DecryptorPrivateCtx>;
+                using Sptr = std::shared_ptr<DecryptorPrivateCtx>;
 
-                virtual CryptoService::Uptr GetCryptoService() const noexcept = 0;
+                virtual CryptoService::Sptr GetCryptoService() const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> ProcessBlock(ReadOnlyMemRegion in, bool suppressPadding = false) const noexcept = 0;
 

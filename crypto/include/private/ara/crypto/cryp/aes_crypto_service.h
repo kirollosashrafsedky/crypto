@@ -18,7 +18,7 @@ namespace ara
                 class AesCryptoService : public CryptoService
                 {
                 public:
-                    using Uptr = std::unique_ptr<AesCryptoService>;
+                    using Sptr = std::shared_ptr<AesCryptoService>;
 
                     AesCryptoService(const AesSymmetricBlockCipherCtx &aesSymmetricBlockCipherCtx);
 
@@ -43,7 +43,7 @@ namespace ara
                     bool IsKeyAvailable() const noexcept override;
 
                 private:
-                    const AesSymmetricBlockCipherCtx &aesSymmetricBlockCipherCtx;
+                    AesSymmetricBlockCipherCtx const *aesSymmetricBlockCipherCtx;
                 };
             }
         }

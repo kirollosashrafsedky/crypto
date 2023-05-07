@@ -17,7 +17,7 @@ namespace ara
             class KeyDerivationFunctionCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<KeyDerivationFunctionCtx>;
+                using Sptr = std::shared_ptr<KeyDerivationFunctionCtx>;
 
                 virtual core::Result<void> AddSalt(ReadOnlyMemRegion salt) noexcept = 0;
 
@@ -25,13 +25,13 @@ namespace ara
 
                 virtual std::uint32_t ConfigIterations(std::uint32_t iterations = 0) noexcept = 0;
 
-                virtual core::Result<SymmetricKey::Uptrc> DeriveKey(bool isSession = true, bool isExportable = false) const noexcept = 0;
+                virtual core::Result<SymmetricKey::Sptrc> DeriveKey(bool isSession = true, bool isExportable = false) const noexcept = 0;
 
-                virtual core::Result<SecretSeed::Uptrc> DeriveSeed(bool isSession = true, bool isExportable = false) const noexcept = 0;
+                virtual core::Result<SecretSeed::Sptrc> DeriveSeed(bool isSession = true, bool isExportable = false) const noexcept = 0;
 
                 virtual core::Result<void> Reset() noexcept = 0;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual std::size_t GetKeyIdSize() const noexcept = 0;
 

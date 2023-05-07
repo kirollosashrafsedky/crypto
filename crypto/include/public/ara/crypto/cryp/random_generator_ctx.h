@@ -16,13 +16,13 @@ namespace ara
             class RandomGeneratorCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<RandomGeneratorCtx>;
+                using Sptr = std::shared_ptr<RandomGeneratorCtx>;
 
                 virtual bool AddEntropy(ReadOnlyMemRegion entropy) noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> Generate(std::uint32_t count) noexcept = 0;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual bool Seed(ReadOnlyMemRegion seed) noexcept = 0;
 

@@ -13,11 +13,11 @@ namespace ara
             class PrivateKey : public RestrictedUseObject
             {
             public:
-                using Uptrc = std::unique_ptr<const PrivateKey>;
+                using Sptrc = std::shared_ptr<const PrivateKey>;
 
                 static const CryptoObjectType kObjectType = CryptoObjectType::kPrivateKey;
 
-                virtual core::Result<PublicKey::Uptrc> GetPublicKey() const noexcept = 0;
+                virtual core::Result<PublicKey::Sptrc> GetPublicKey() const noexcept = 0;
             };
         }
     }

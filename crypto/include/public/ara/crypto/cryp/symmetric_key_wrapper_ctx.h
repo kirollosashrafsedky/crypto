@@ -18,11 +18,11 @@ namespace ara
             class SymmetricKeyWrapperCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<SymmetricKeyWrapperCtx>;
+                using Sptr = std::shared_ptr<SymmetricKeyWrapperCtx>;
 
                 virtual std::size_t CalculateWrappedKeySize(std::size_t keyLength) const noexcept = 0;
 
-                virtual ExtensionService::Uptr GetExtensionService() const noexcept = 0;
+                virtual ExtensionService::Sptr GetExtensionService() const noexcept = 0;
 
                 virtual std::size_t GetMaxTargetKeyLength() const noexcept = 0;
 
@@ -33,11 +33,11 @@ namespace ara
                 virtual core::Result<void> SetKey(const SymmetricKey &key, CryptoTransform transform) noexcept = 0;
 
                 template <typename ExpectedKey>
-                core::Result<typename ExpectedKey::Uptrc> UnwrapConcreteKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) noexcept;
+                core::Result<typename ExpectedKey::Sptrc> UnwrapConcreteKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) noexcept;
 
-                virtual core::Result<RestrictedUseObject::Uptrc> UnwrapKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) const noexcept = 0;
+                virtual core::Result<RestrictedUseObject::Sptrc> UnwrapKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) const noexcept = 0;
 
-                virtual core::Result<SecretSeed::Uptrc> UnwrapSeed(ReadOnlyMemRegion wrappedSeed, AlgId targetAlgId, SecretSeed::Usage allowedUsage) const noexcept = 0;
+                virtual core::Result<SecretSeed::Sptrc> UnwrapSeed(ReadOnlyMemRegion wrappedSeed, AlgId targetAlgId, SecretSeed::Usage allowedUsage) const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> WrapKeyMaterial(const RestrictedUseObject &key) const noexcept = 0;
             };
