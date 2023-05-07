@@ -106,6 +106,8 @@ namespace ara
                     const core::InstanceSpecifier isSpecifier;
 
                     static CryptoppCryptoProvider::Sptr providerInstance;
+
+                    std::uint64_t currentVersionStamp;
                 };
             }
         }

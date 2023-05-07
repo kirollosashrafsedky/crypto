@@ -1,8 +1,14 @@
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
+
 #include "ara/crypto/keys/file_keyslot.h"
 #include "ara/crypto/common/crypto_error_domain.h"
 #include "ara/crypto/cryp/cryptopp_crypto_provider.h"
 #include "ara/crypto/common/entry_point.h"
 #include "ara/crypto/keys/main_key_storage_provider.h"
+#include <iostream>
+#include <fstream>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 namespace ara
 {
@@ -83,17 +89,16 @@ namespace ara
                 return ((!this->isOpened) || (this->isOpened && this->keyMaterial.size() == 0));
             }
 
-            // TODO
             core::Result<IOInterface::Sptr> FileKeySlot::Open(bool subscribeForUpdates, bool writeable) noexcept
             {
                 if (subscribeForUpdates)
                 {
-                    if (!this->keyStorageProvider->addKeyToSubscribtionList(std::shared_ptr<FileKeySlot>(this)))
+                    if (!this->keyStorageProvider->addKeyToSubscribtionList(this))
                     {
                         return core::Result<IOInterface::Sptr>::FromError(CryptoErrc::kInvalidUsageOrder);
                     }
                 }
-                if (this->isOpened && this->isWritable && (writeable || this->keyStorageProvider->isSlotPendingTransaction(std::shared_ptr<FileKeySlot>(this))))
+                if (this->isOpened && this->isWritable && (writeable || this->keyStorageProvider->isSlotPendingTransaction(this)))
                 {
                     return core::Result<IOInterface::Sptr>::FromError(CryptoErrc::kBusyResource);
                 }
@@ -103,25 +108,75 @@ namespace ara
                     return core::Result<IOInterface::Sptr>::FromError(CryptoErrc::kModifiedResource);
                 }
 
+                std::fstream file(this->fileName, std::fstream::in | std::fstream::out);
+
+                if (!file.is_open())
+                {
+                    file.open(this->fileName, std::fstream::in | std::fstream::out | std::fstream::trunc);
+                }
+
+                boost::property_tree::ptree root;
+                try
+                {
+                    boost::property_tree::read_json(file, root);
+
+                    std::string objectUidStr = root.get<std::string>("Uid");
+                    std::string objectTypeStr = root.get<std::string>("type");
+                    std::string keyMaterialStr = root.get<std::string>("data");
+
+                    CryptoObjectType objectType;
+                    if (objectTypeStr == "kSymmetricKey")
+                        objectType = CryptoObjectType::kSymmetricKey;
+                    else if (objectTypeStr == "kPrivateKey")
+                        objectType = CryptoObjectType::kPrivateKey;
+                    else if (objectTypeStr == "kPublicKey")
+                        objectType = CryptoObjectType::kPublicKey;
+                    else if (objectTypeStr == "kSignature")
+                        objectType = CryptoObjectType::kSignature;
+                    else if (objectTypeStr == "kSecretSeed")
+                        objectType = CryptoObjectType::kSecretSeed;
+                    else
+                        objectType = CryptoObjectType::kUndefined;
+
+                    this->keySlotContentProps.mObjectType = objectType;
+
+                    std::string mQwordMsStr(objectUidStr.begin(), objectUidStr.begin() + 16);
+                    std::string mQwordLsStr(objectUidStr.begin() + 16, objectUidStr.begin() + 32);
+                    std::string mVersionStampStr(objectUidStr.begin() + 32, objectUidStr.end());
+
+                    CryptoObjectUid objectUid;
+                    objectUid.mGeneratorUid.mQwordMs = std::stoul(mQwordMsStr, nullptr, 16);
+                    objectUid.mGeneratorUid.mQwordLs = std::stoul(mQwordLsStr, nullptr, 16);
+                    objectUid.mVersionStamp = std::stoul(mVersionStampStr, nullptr, 16);
+
+                    this->keySlotContentProps.mObjectUid = objectUid;
+
+                    for (std::size_t i = 0; i < keyMaterialStr.length(); i += 2)
+                    {
+                        std::string byteString = keyMaterialStr.substr(i, 2);
+                        std::stringstream ss;
+                        ss << std::hex << byteString;
+
+                        uint32_t byteValue;
+                        ss >> byteValue;
+
+                        this->keyMaterial.push_back(static_cast<core::Byte>(byteValue));
+                    }
+
+                    this->keySlotContentProps.mObjectSize = this->keyMaterial.size();
+                }
+                catch (boost::property_tree::json_parser::json_parser_error &e)
+                {
+                    this->keySlotContentProps.mObjectType = CryptoObjectType::kUndefined;
+                    this->keySlotContentProps.mObjectSize = 0;
+                    this->keySlotContentProps.mObjectUid = CryptoObjectUid();
+                }
+
+                file.close();
+
                 this->keySlotContentProps.isExportable = this->keySlotPrototypeProps.mExportAllowed;
                 this->keySlotContentProps.mAlgId = this->keySlotPrototypeProps.mAlgId;
                 this->keySlotContentProps.mContentAllowedUsage = this->keySlotPrototypeProps.mContentAllowedUsage;
-                if (this->keySlotPrototypeProps.mAllowContentTypeChange)
-                {
-                    // read object type from key file
-                    // this->keySlotContentProps.mObjectType = ;
-                }
-                else
-                {
-                    this->keySlotContentProps.mObjectType = this->keySlotPrototypeProps.mObjectType;
-                }
-                // read key material fron key file
-                //  this->keyMaterial = ;
-
-                this->keySlotContentProps.mObjectSize = this->keyMaterial.size();
-
-                // read object id from key file
-                // this->keySlotContentProps.mObjectUid = ;
 
                 this->isWritable = writeable;
                 this->isOpened = true;
@@ -140,7 +195,7 @@ namespace ara
                 {
                     return core::Result<void>::FromError(CryptoErrc::kEmptyContainer);
                 }
-                if (!this->keySlotPrototypeProps.mAllowContentTypeChange && containerPtr->GetTypeRestriction() != this->keySlotPrototypeProps.mObjectType)
+                if (!this->keySlotPrototypeProps.mAllowContentTypeChange && containerPtr->GetCryptoObjectType() != this->keySlotPrototypeProps.mObjectType)
                 {
                     return core::Result<void>::FromError(CryptoErrc::kContentRestrictions);
                 }
@@ -196,13 +251,57 @@ namespace ara
                 return {};
             }
 
-            // TODO
             bool FileKeySlot::saveFile() noexcept
             {
-                // open this->fileName for write
-                // concat objectType, objectID, keyMaterial and write to file
-                // close file and return true if successfull
-                // return false if any exception happened
+
+                std::ofstream fileWrite(this->fileName, std::ofstream::out);
+                if (!fileWrite.is_open())
+                {
+                    std::cerr << "Failed to open file" << std::endl;
+                    return false;
+                }
+
+                boost::property_tree::ptree root;
+
+                std::string cryptoObjectTypeStr;
+                if (this->keySlotContentProps.mObjectType == CryptoObjectType::kSymmetricKey)
+                    cryptoObjectTypeStr = "kSymmetricKey";
+                else if (this->keySlotContentProps.mObjectType == CryptoObjectType::kPrivateKey)
+                    cryptoObjectTypeStr = "kPrivateKey";
+                else if (this->keySlotContentProps.mObjectType == CryptoObjectType::kPublicKey)
+                    cryptoObjectTypeStr = "kPublicKey";
+                else if (this->keySlotContentProps.mObjectType == CryptoObjectType::kSecretSeed)
+                    cryptoObjectTypeStr = "kSecretSeed";
+                else if (this->keySlotContentProps.mObjectType == CryptoObjectType::kSignature)
+                    cryptoObjectTypeStr = "kSignature";
+                else
+                    return false;
+
+                std::stringstream ssMs;
+                std::stringstream ssLs;
+                std::stringstream ssVersion;
+                ssMs << std::hex << std::setw(16) << std::setfill('0') << this->keySlotContentProps.mObjectUid.mGeneratorUid.mQwordMs;
+                ssLs << std::hex << std::setw(16) << std::setfill('0') << this->keySlotContentProps.mObjectUid.mGeneratorUid.mQwordLs;
+                ssVersion << std::hex << std::setw(16) << std::setfill('0') << this->keySlotContentProps.mObjectUid.mVersionStamp;
+
+                std::string mQwordMsStr = ssMs.str();
+                std::string mQwordLsStr = ssLs.str();
+                std::string mVersionStampStr = ssVersion.str();
+
+                std::string keyMaterialStr;
+                for (const auto &byte : this->keyMaterial)
+                {
+                    std::stringstream ssKeyMaterial;
+                    ssKeyMaterial << std::hex << std::setw(2) << std::setfill('0') << int(static_cast<uint8_t>(byte));
+                    keyMaterialStr += ssKeyMaterial.str();
+                }
+
+                root.add("Uid", mQwordMsStr + mQwordLsStr + mVersionStampStr);
+                root.add("type", cryptoObjectTypeStr);
+                root.add("data", keyMaterialStr);
+
+                boost::property_tree::write_json(fileWrite, root, false);
+                fileWrite.close();
                 return true;
             }
 

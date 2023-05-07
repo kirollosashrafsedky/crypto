@@ -36,23 +36,23 @@ namespace ara
 
                     core::Result<void> UnsubscribeObserver(KeySlot &slot) noexcept override;
 
-                    bool addKeyToSubscribtionList(KeySlot::Sptrc keySlot) noexcept;
+                    bool addKeyToSubscribtionList(KeySlot const *keySlot) noexcept;
 
-                    bool isSlotPendingTransaction(KeySlot::Sptrc keySlot) const noexcept;
+                    bool isSlotPendingTransaction(KeySlot const *keySlot) const noexcept;
 
                     static MainKeyStorageProvider::Sptr getInstance() noexcept;
 
                 private:
-                    int64_t getKeyIndexInList(KeySlot::Sptrc keySlot) const noexcept;
+                    int64_t getKeyIndexInList(KeySlot const *keySlot) const noexcept;
 
-                    bool removeKeyToSubscribtionList(KeySlot::Sptrc keySlot) noexcept;
+                    bool removeKeyToSubscribtionList(KeySlot const *keySlot) noexcept;
 
                     int64_t getSlotPendingTransactionIndex(TransactionId id) const noexcept;
 
                     void updateManifest(core::InstanceSpecifier iSpecify, CryptoAlgId algId, AllowedUsageFlags allowedUsageFlags, CryptoObjectType objectType, bool isExportable) const noexcept;
 
                 private:
-                    std::vector<std::shared_ptr<const KeySlot>> subscribedKeySlots;
+                    std::vector<KeySlot const *> subscribedKeySlots;
 
                     UpdatesObserver::Sptr observer;
 

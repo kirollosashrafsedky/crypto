@@ -165,9 +165,9 @@ namespace ara
                 {
                     return core::Result<void>::FromError(CryptoErrc::kIncompatibleObject);
                 }
-                if ((transform != CryptoTransform::kDecrypt && transform != CryptoTransform::kEncrypt) ||
-                    (transform == CryptoTransform::kDecrypt && (aesKey.GetAllowedUsage() & kAllowDataDecryption == 0)) ||
-                    (transform == CryptoTransform::kEncrypt && (aesKey.GetAllowedUsage() & kAllowDataEncryption == 0)))
+                if (((transform != CryptoTransform::kDecrypt) && (transform != CryptoTransform::kEncrypt)) ||
+                    ((transform == CryptoTransform::kDecrypt) && ((aesKey.GetAllowedUsage() & kAllowDataDecryption) == 0)) ||
+                    ((transform == CryptoTransform::kEncrypt) && ((aesKey.GetAllowedUsage() & kAllowDataEncryption) == 0)))
                 {
                     return core::Result<void>::FromError(CryptoErrc::kUsageViolation);
                 }

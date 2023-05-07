@@ -26,7 +26,7 @@ namespace ara
             CryptoppCryptoProvider::Sptr CryptoppCryptoProvider::providerInstance;
 
             CryptoppCryptoProvider::CryptoppCryptoProvider()
-                : isSpecifier(CRYPTOPP_CRYPTO_PROVIDER)
+                : isSpecifier(CRYPTOPP_CRYPTO_PROVIDER), currentVersionStamp(0)
             {
             }
             core::Result<VolatileTrustedContainer::Sptr> CryptoppCryptoProvider::AllocVolatileContainer(std::size_t capacity) noexcept
@@ -171,11 +171,12 @@ namespace ara
                 {
                     CryptoPP::AutoSeededRandomPool prng;
                     cryp::CryptoObject::COIdentifier keyCouid;
-                    CryptoObjectUid uiid;
-                    prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&uiid.mGeneratorUid.mQwordLs), sizeof(uiid.mGeneratorUid.mQwordLs));
-                    prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&uiid.mGeneratorUid.mQwordMs), sizeof(uiid.mGeneratorUid.mQwordMs));
+                    CryptoObjectUid uuid;
+                    prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&uuid.mGeneratorUid.mQwordLs), sizeof(uuid.mGeneratorUid.mQwordLs));
+                    prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&uuid.mGeneratorUid.mQwordMs), sizeof(uuid.mGeneratorUid.mQwordMs));
+                    uuid.mVersionStamp = currentVersionStamp++;
                     keyCouid.mCOType = CryptoObjectType::kSymmetricKey;
-                    keyCouid.mCouid = uiid;
+                    keyCouid.mCouid = uuid;
 
                     CryptoPP::SecByteBlock keyData(CryptoPP::AES::DEFAULT_KEYLENGTH);
                     prng.GenerateBlock(keyData, keyData.size());
