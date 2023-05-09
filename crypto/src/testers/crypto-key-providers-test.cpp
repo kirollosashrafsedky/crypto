@@ -40,3 +40,58 @@ void cryptoKeyProvidersTest()
 
     keyStorageProvider->CommitTransaction(transactionId);
 }
+
+void PublicKeyLoadTest()
+{
+    InstanceSpecifier cyptoppSpecifier(CRYPTOPP_CRYPTO_PROVIDER);
+    CryptoProvider::Sptr cryptoProvider = LoadCryptoProvider(cyptoppSpecifier);
+
+    KeyStorageProvider::Sptr keyStorageProvider = LoadKeyStorageProvider();
+
+    InstanceSpecifier key1_Specifier("rsa_512_public_key_1");
+    KeySlot::Sptr keySlot_1 = keyStorageProvider->LoadKeySlot(key1_Specifier).Value();
+    IOInterface::Sptr keySlot_1Io = keySlot_1->Open(false, true).Value();
+
+    PublicKey::Sptrc publicKey_1 = cryptoProvider->LoadPublicKey(*keySlot_1Io).Value();
+
+    InstanceSpecifier key2_Specifier("rsa_512_public_key_2");
+    KeySlot::Sptr keySlot_2 = keyStorageProvider->LoadKeySlot(key2_Specifier).Value();
+    IOInterface::Sptr keySlot_2Io = keySlot_2->Open(false, true).Value();
+
+    TransactionScope scope;
+    scope.push_back(keySlot_2);
+    TransactionId transactionId = keyStorageProvider->BeginTransaction(scope).Value();
+
+    keySlot_2->SaveCopy(*keySlot_1Io);
+
+    keyStorageProvider->CommitTransaction(transactionId);
+}
+
+void PublicPrivateKeysGenerateTest()
+{
+    InstanceSpecifier cyptoppSpecifier(CRYPTOPP_CRYPTO_PROVIDER);
+    CryptoProvider::Sptr cryptoProvider = LoadCryptoProvider(cyptoppSpecifier);
+
+    PrivateKey::Sptrc privateKey = cryptoProvider->GeneratePrivateKey(RSA_4096_ALG_ID, 0xFF, false, true).Value();
+    PublicKey::Sptrc publicKey = privateKey->GetPublicKey().Value();
+
+    KeyStorageProvider::Sptr keyStorageProvider = LoadKeyStorageProvider();
+
+    InstanceSpecifier public_key_1_Specifier("rsa_4096_public_key_1");
+    KeySlot::Sptr public_key_1_slot = keyStorageProvider->LoadKeySlot(public_key_1_Specifier).Value();
+    IOInterface::Sptr public_key_1_io = public_key_1_slot->Open(false, true).Value();
+
+    InstanceSpecifier private_key_1_Specifier("rsa_4096_private_key_1");
+    KeySlot::Sptr private_key_1_slot = keyStorageProvider->LoadKeySlot(private_key_1_Specifier).Value();
+    IOInterface::Sptr private_key_1_io = private_key_1_slot->Open(false, true).Value();
+
+    TransactionScope scope;
+    scope.push_back(public_key_1_slot);
+    scope.push_back(private_key_1_slot);
+    TransactionId transactionId = keyStorageProvider->BeginTransaction(scope).Value();
+
+    publicKey->Save(*public_key_1_io);
+    privateKey->Save(*private_key_1_io);
+
+    keyStorageProvider->CommitTransaction(transactionId);
+}

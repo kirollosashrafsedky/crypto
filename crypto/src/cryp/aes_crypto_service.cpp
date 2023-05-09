@@ -71,7 +71,7 @@ namespace ara
 
                 bool AesCryptoService::IsKeyBitLengthSupported(std::size_t keyBitLength) const noexcept
                 {
-                    return (keyBitLength == 128 || keyBitLength == 192 || keyBitLength == 256);
+                    return (keyBitLength == 128);
                 }
 
                 bool AesCryptoService::IsKeyAvailable() const noexcept

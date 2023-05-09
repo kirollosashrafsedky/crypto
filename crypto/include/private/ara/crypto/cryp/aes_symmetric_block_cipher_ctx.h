@@ -3,7 +3,6 @@
 
 #include "ara/crypto/cryp/symmetric_block_cipher_ctx.h"
 #include "ara/crypto/cryp/cryobj/aes_symmetric_key.h"
-#include "ara/crypto/cryp/crypto_service.h"
 #include "ara/crypto/cryp/aes_crypto_service.h"
 
 namespace ara

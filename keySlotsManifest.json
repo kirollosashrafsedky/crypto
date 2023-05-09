@@ -13,6 +13,34 @@
             "AllocateShadowCopy": "true",
             "AllowContentTypeChange": "false",
             "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "rsa_4096_public_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/rsa_4096_public_key_1.key",
+            "AlgId": "5",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPublicKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "10000",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "rsa_4096_private_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/rsa_4096_private_key_1.key",
+            "AlgId": "5",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPrivateKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "10000",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
         }
     ]
 }

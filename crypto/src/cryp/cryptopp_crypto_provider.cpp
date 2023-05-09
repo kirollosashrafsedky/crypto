@@ -3,6 +3,8 @@
 #include "ara/crypto/common/mem_trusted_container.h"
 #include "ara/crypto/cryp/cryobj/crypto_primitive_id_internal.h"
 #include "ara/crypto/cryp/aes_symmetric_block_cipher_ctx.h"
+#include "ara/crypto/cryp/rsa_encryptor_public_ctx.h"
+#include "ara/crypto/cryp/rsa_decryptor_private_ctx.h"
 #include "ara/crypto/cryp/algorithm_ids.h"
 #include "ara/crypto/common/io_interface_internal.h"
 
@@ -29,6 +31,7 @@ namespace ara
                 : isSpecifier(CRYPTOPP_CRYPTO_PROVIDER), currentVersionStamp(0)
             {
             }
+
             core::Result<VolatileTrustedContainer::Sptr> CryptoppCryptoProvider::AllocVolatileContainer(std::size_t capacity) noexcept
             {
                 return core::Result<VolatileTrustedContainer::Sptr>::FromValue(std::make_shared<crypto::internal::MemTrustedContainer>(CryptoppCryptoProvider::getInstance(), capacity));
@@ -65,10 +68,28 @@ namespace ara
 
             core::Result<DecryptorPrivateCtx::Sptr> CryptoppCryptoProvider::CreateDecryptorPrivateCtx(AlgId algId) noexcept
             {
+                DecryptorPrivateCtx::Sptr ptr;
+                if (algId == RSA_512_ALG_ID || algId == RSA_1024_ALG_ID || algId == RSA_2048_ALG_ID || algId == RSA_4096_ALG_ID)
+                {
+                    ptr = std::make_shared<RsaDecryptorPrivateCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<DecryptorPrivateCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<DecryptorPrivateCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<EncryptorPublicCtx::Sptr> CryptoppCryptoProvider::CreateEncryptorPublicCtx(AlgId algId) noexcept
             {
+                EncryptorPublicCtx::Sptr ptr;
+                if (algId == RSA_512_ALG_ID || algId == RSA_1024_ALG_ID || algId == RSA_2048_ALG_ID || algId == RSA_4096_ALG_ID)
+                {
+                    ptr = std::make_shared<RsaEncryptorPublicCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<EncryptorPublicCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<EncryptorPublicCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<Signature::Sptrc> CryptoppCryptoProvider::CreateHashDigest(AlgId hashAlgId, ReadOnlyMemRegion value) noexcept
@@ -158,6 +179,33 @@ namespace ara
 
             core::Result<PrivateKey::Sptrc> CryptoppCryptoProvider::GeneratePrivateKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession, bool isExportable) noexcept
             {
+                PrivateKey::Sptrc key;
+                std::uint32_t keySize = 0;
+                if (algId == RSA_512_ALG_ID)
+                    keySize = RSA_512_KEY_SIZE;
+                else if (algId == RSA_1024_ALG_ID)
+                    keySize = RSA_1024_KEY_SIZE;
+                else if (algId == RSA_2048_ALG_ID)
+                    keySize = RSA_2048_KEY_SIZE;
+                else if (algId == RSA_4096_ALG_ID)
+                    keySize = RSA_4096_KEY_SIZE;
+                else
+                    return core::Result<PrivateKey::Sptrc>::FromError(CryptoErrc::kUnknownIdentifier);
+
+                CryptoPP::AutoSeededRandomPool prng;
+                CryptoPP::InvertibleRSAFunction rsaParams;
+                rsaParams.GenerateRandomWithKeySize(prng, keySize);
+
+                CryptoPP::RSA::PrivateKey privateKey(rsaParams);
+
+                cryp::CryptoObject::COIdentifier keyCouid;
+                keyCouid.mCOType = CryptoObjectType::kPrivateKey;
+                keyCouid.mCouid.mVersionStamp = currentVersionStamp++;
+                prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&keyCouid.mCouid.mGeneratorUid.mQwordLs), sizeof(keyCouid.mCouid.mGeneratorUid.mQwordLs));
+                prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&keyCouid.mCouid.mGeneratorUid.mQwordMs), sizeof(keyCouid.mCouid.mGeneratorUid.mQwordMs));
+
+                key = std::make_shared<RsaPrivateKey>(CryptoppCryptoProvider::getInstance(), keyCouid, algId, privateKey, allowedUsage, isSession, isExportable);
+                return core::Result<PrivateKey::Sptrc>::FromValue(key);
             }
 
             core::Result<SecretSeed::Sptrc> CryptoppCryptoProvider::GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession, bool isExportable) noexcept
@@ -201,11 +249,34 @@ namespace ara
                 }
                 break;
                 case CryptoObjectType::kPrivateKey:
-
-                    break;
+                {
+                    if (algId == RSA_512_ALG_ID)
+                        return RSA_512_PRIVATE_PAYLOAD_SIZE;
+                    else if (algId == RSA_1024_ALG_ID)
+                        return RSA_1024_PRIVATE_PAYLOAD_SIZE;
+                    else if (algId == RSA_2048_ALG_ID)
+                        return RSA_2048_PRIVATE_PAYLOAD_SIZE;
+                    else if (algId == RSA_4096_ALG_ID)
+                        return RSA_4096_PRIVATE_PAYLOAD_SIZE;
+                    else
+                        return core::Result<std::size_t>::FromError(CryptoErrc::kIncompatibleArguments);
+                }
+                break;
                 case CryptoObjectType::kPublicKey:
+                {
 
-                    break;
+                    if (algId == RSA_512_ALG_ID)
+                        return RSA_512_PUBLIC_PAYLOAD_SIZE;
+                    else if (algId == RSA_1024_ALG_ID)
+                        return RSA_1024_PUBLIC_PAYLOAD_SIZE;
+                    else if (algId == RSA_2048_ALG_ID)
+                        return RSA_2048_PUBLIC_PAYLOAD_SIZE;
+                    else if (algId == RSA_4096_ALG_ID)
+                        return RSA_4096_PUBLIC_PAYLOAD_SIZE;
+                    else
+                        return core::Result<std::size_t>::FromError(CryptoErrc::kIncompatibleArguments);
+                }
+                break;
                 case CryptoObjectType::kSecretSeed:
 
                     break;
@@ -215,7 +286,6 @@ namespace ara
                 case CryptoObjectType::kUndefined:
                 default:
                 {
-
                     return core::Result<std::size_t>::FromError(CryptoErrc::kUnknownIdentifier);
                 }
                 break;
@@ -300,10 +370,64 @@ namespace ara
 
             core::Result<PrivateKey::Sptrc> CryptoppCryptoProvider::LoadPrivateKey(const IOInterface &container) noexcept
             {
+                const crypto::internal::IOInterfaceInternal &io = dynamic_cast<const crypto::internal::IOInterfaceInternal &>(container);
+                if (io.getKeyMaterial().size() == 0)
+                {
+                    return core::Result<PrivateKey::Sptrc>::FromError(CryptoErrc::kEmptyContainer);
+                }
+                if (!io.IsValid())
+                {
+                    return core::Result<PrivateKey::Sptrc>::FromError(CryptoErrc::kModifiedResource);
+                }
+                if (io.GetCryptoObjectType() != CryptoObjectType::kPrivateKey)
+                {
+                    return core::Result<PrivateKey::Sptrc>::FromError(CryptoErrc::kIncompatibleObject);
+                }
+                cryp::CryptoObject::COIdentifier keyCouid;
+                keyCouid.mCouid = io.GetObjectId();
+                keyCouid.mCOType = io.GetCryptoObjectType();
+
+                CryptoPP::RSA::PrivateKey keyData;
+
+                CryptoPP::ByteQueue byteQueue;
+                byteQueue.Put(reinterpret_cast<CryptoPP::byte *>(io.getKeyMaterial().data()), io.getKeyMaterial().size());
+                byteQueue.MessageEnd();
+
+                keyData.Load(byteQueue);
+
+                PrivateKey::Sptrc key = std::make_shared<RsaPrivateKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                return core::Result<PrivateKey::Sptrc>::FromValue(key);
             }
 
             core::Result<PublicKey::Sptrc> CryptoppCryptoProvider::LoadPublicKey(const IOInterface &container) noexcept
             {
+                const crypto::internal::IOInterfaceInternal &io = dynamic_cast<const crypto::internal::IOInterfaceInternal &>(container);
+                if (io.getKeyMaterial().size() == 0)
+                {
+                    return core::Result<PublicKey::Sptrc>::FromError(CryptoErrc::kEmptyContainer);
+                }
+                if (!io.IsValid())
+                {
+                    return core::Result<PublicKey::Sptrc>::FromError(CryptoErrc::kModifiedResource);
+                }
+                if (io.GetCryptoObjectType() != CryptoObjectType::kPublicKey)
+                {
+                    return core::Result<PublicKey::Sptrc>::FromError(CryptoErrc::kIncompatibleObject);
+                }
+                cryp::CryptoObject::COIdentifier keyCouid;
+                keyCouid.mCouid = io.GetObjectId();
+                keyCouid.mCOType = io.GetCryptoObjectType();
+
+                CryptoPP::RSA::PublicKey keyData;
+
+                CryptoPP::ByteQueue byteQueue;
+                byteQueue.Put(reinterpret_cast<CryptoPP::byte *>(io.getKeyMaterial().data()), io.getKeyMaterial().size());
+                byteQueue.MessageEnd();
+
+                keyData.Load(byteQueue);
+
+                PublicKey::Sptrc key = std::make_shared<RsaPublicKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                return core::Result<PublicKey::Sptrc>::FromValue(key);
             }
 
             core::Result<SecretSeed::Sptrc> CryptoppCryptoProvider::LoadSecretSeed(const IOInterface &container) noexcept
