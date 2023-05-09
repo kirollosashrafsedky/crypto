@@ -75,24 +75,24 @@ namespace ara
 
                 if (this->algId == SHA3_224_ALG_ID)
                 {
-                    this->sha = std::make_shared<CryptoPP::SHA224>();
+                    this->sha = std::make_shared<CryptoPP::SHA3_224>();
                 }
                 if (this->algId == SHA3_256_ALG_ID)
                 {
-                    this->sha = std::make_shared<CryptoPP::SHA256>();
+                    this->sha = std::make_shared<CryptoPP::SHA3_256>();
                 }
                 if (this->algId == SHA3_384_ALG_ID)
                 {
-                    this->sha = std::make_shared<CryptoPP::SHA384>();
+                    this->sha = std::make_shared<CryptoPP::SHA3_384>();
                 }
                 if (this->algId == SHA3_512_ALG_ID)
                 {
-                    this->sha = std::make_shared<CryptoPP::SHA512>();
+                    this->sha = std::make_shared<CryptoPP::SHA3_512>();
                 }
                 else
                 {
                     // default SHA
-                    this->sha = std::make_shared<CryptoPP::SHA256>();
+                    this->sha = std::make_shared<CryptoPP::SHA3_256>();
                 }
 
                 this->hashStarted = true;

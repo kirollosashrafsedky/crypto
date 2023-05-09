@@ -4,7 +4,7 @@
 #include "ara/crypto/cryp/hash_function_ctx.h"
 #include "ara/crypto/cryp/sha_digest_service.h"
 #include "ara/crypto/cryp/cryobj/crypto_primitive_id_internal.h"
-#include <cryptopp/sha.h>
+#include <cryptopp/sha3.h>
 
 namespace ara
 {
