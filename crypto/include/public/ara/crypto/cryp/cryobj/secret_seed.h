@@ -15,6 +15,7 @@ namespace ara
             {
             public:
                 using Sptrc = std::shared_ptr<const SecretSeed>;
+
                 using Sptr = std::shared_ptr<SecretSeed>;
 
                 static const CryptoObjectType kObjectType = CryptoObjectType::kSecretSeed;

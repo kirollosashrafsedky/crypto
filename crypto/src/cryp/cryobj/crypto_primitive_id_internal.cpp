@@ -22,6 +22,10 @@ namespace ara
                     primitiveName = RSA_2048_PRIMITIVE_NAME;
                 else if (this->algId == RSA_4096_ALG_ID)
                     primitiveName = RSA_4096_PRIMITIVE_NAME;
+                else if (this->algId == INCREMENTAL_SEED_ALG_ID)
+                    primitiveName = INCREMENTAL_SEED_PRIMITIVE_NAME;
+                else if (this->algId == AUTO_RNG_ALG_ID)
+                    primitiveName = AUTO_RNG_PRIMITIVE_NAME;
                 else
                     primitiveName = "Undefined";
             }
@@ -39,6 +43,10 @@ namespace ara
                     algId = RSA_2048_ALG_ID;
                 else if (this->primitiveName == RSA_4096_PRIMITIVE_NAME)
                     algId = RSA_4096_ALG_ID;
+                else if (this->primitiveName == INCREMENTAL_SEED_PRIMITIVE_NAME)
+                    algId = INCREMENTAL_SEED_ALG_ID;
+                else if (this->primitiveName == AUTO_RNG_PRIMITIVE_NAME)
+                    algId = AUTO_RNG_ALG_ID;
                 else
                     algId = 0;
             }

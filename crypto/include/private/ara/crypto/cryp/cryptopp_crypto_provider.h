@@ -76,7 +76,7 @@ namespace ara
 
                     core::Result<PrivateKey::Sptrc> GeneratePrivateKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession = false, bool isExportable = false) noexcept;
 
-                    core::Result<SecretSeed::Sptrc> GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession = true, bool isExportable = false) noexcept;
+                    core::Result<SecretSeed::Sptr> GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession = true, bool isExportable = false) noexcept;
 
                     core::Result<SymmetricKey::Sptrc> GenerateSymmetricKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession = true, bool isExportable = false) noexcept;
 
@@ -94,7 +94,7 @@ namespace ara
 
                     core::Result<PublicKey::Sptrc> LoadPublicKey(const IOInterface &container) noexcept;
 
-                    core::Result<SecretSeed::Sptrc> LoadSecretSeed(const IOInterface &container) noexcept;
+                    core::Result<SecretSeed::Sptr> LoadSecretSeed(const IOInterface &container) noexcept;
 
                     core::Result<SymmetricKey::Sptrc> LoadSymmetricKey(const IOInterface &container) noexcept;
 

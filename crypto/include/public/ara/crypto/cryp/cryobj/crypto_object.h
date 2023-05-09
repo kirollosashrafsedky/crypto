@@ -30,6 +30,7 @@ namespace ara
 
                 virtual ~CryptoObject() noexcept = default;
 
+                // todo
                 template <class ConcreteObject>
                 static core::Result<typename ConcreteObject::Sptrc> Downcast(CryptoObject::Sptrc &&object) noexcept
                 {

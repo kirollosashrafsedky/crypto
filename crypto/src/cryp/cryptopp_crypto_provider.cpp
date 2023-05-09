@@ -2,9 +2,11 @@
 #include "ara/crypto/cryp/cryptopp_crypto_provider.h"
 #include "ara/crypto/common/mem_trusted_container.h"
 #include "ara/crypto/cryp/cryobj/crypto_primitive_id_internal.h"
+#include "ara/crypto/cryp/cryobj/incremental_secret_seed.h"
 #include "ara/crypto/cryp/aes_symmetric_block_cipher_ctx.h"
 #include "ara/crypto/cryp/rsa_encryptor_public_ctx.h"
 #include "ara/crypto/cryp/rsa_decryptor_private_ctx.h"
+#include "ara/crypto/cryp/auto_random_generator_ctx.h"
 #include "ara/crypto/cryp/algorithm_ids.h"
 #include "ara/crypto/common/io_interface_internal.h"
 
@@ -126,6 +128,18 @@ namespace ara
 
             core::Result<RandomGeneratorCtx::Sptr> CryptoppCryptoProvider::CreateRandomGeneratorCtx(AlgId algId, bool initialize) noexcept
             {
+                AutoRandomGeneratorCtx::Sptr ptr;
+                if (algId == AUTO_RNG_ALG_ID)
+                {
+                    ptr = std::make_shared<AutoRandomGeneratorCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<RandomGeneratorCtx::Sptr>::FromValue(ptr);
+
+                // remove compile warning
+                if (initialize)
+                    return core::Result<RandomGeneratorCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
+                return core::Result<RandomGeneratorCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<SigEncodePrivateCtx::Sptr> CryptoppCryptoProvider::CreateSigEncodePrivateCtx(AlgId algId) noexcept
@@ -208,8 +222,29 @@ namespace ara
                 return core::Result<PrivateKey::Sptrc>::FromValue(key);
             }
 
-            core::Result<SecretSeed::Sptrc> CryptoppCryptoProvider::GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession, bool isExportable) noexcept
+            core::Result<SecretSeed::Sptr> CryptoppCryptoProvider::GenerateSeed(AlgId algId, SecretSeed::Usage allowedUsage, bool isSession, bool isExportable) noexcept
             {
+                SecretSeed::Sptr key;
+                if (algId == INCREMENTAL_SEED_ALG_ID)
+                {
+                    CryptoPP::AutoSeededRandomPool prng;
+                    cryp::CryptoObject::COIdentifier keyCouid;
+                    CryptoObjectUid uuid;
+                    prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&uuid.mGeneratorUid.mQwordLs), sizeof(uuid.mGeneratorUid.mQwordLs));
+                    prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&uuid.mGeneratorUid.mQwordMs), sizeof(uuid.mGeneratorUid.mQwordMs));
+                    uuid.mVersionStamp = currentVersionStamp++;
+                    keyCouid.mCOType = CryptoObjectType::kSecretSeed;
+                    keyCouid.mCouid = uuid;
+
+                    CryptoPP::SecByteBlock keyData(INCREMENTAL_SEED_PAYLOAD_SIZE);
+                    prng.GenerateBlock(keyData, keyData.size());
+                    core::Vector<core::Byte> keyDataVec(keyData.begin(), keyData.end());
+                    key = std::make_shared<IncrementalSecretSeed>(CryptoppCryptoProvider::getInstance(), keyCouid, keyDataVec, allowedUsage, isSession, isExportable);
+                }
+                if (key)
+                    return core::Result<SecretSeed::Sptr>::FromValue(key);
+
+                return core::Result<SecretSeed::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<SymmetricKey::Sptrc> CryptoppCryptoProvider::GenerateSymmetricKey(AlgId algId, AllowedUsageFlags allowedUsage, bool isSession, bool isExportable) noexcept
@@ -290,6 +325,7 @@ namespace ara
                 }
                 break;
                 }
+                return 0;
             }
 
             core::Result<std::size_t> CryptoppCryptoProvider::GetSerializedSize(CryptoObjectType cryptoObjectType, AlgId algId, Serializable::FormatId formatId) const noexcept
@@ -349,7 +385,7 @@ namespace ara
                 break;
                 case CryptoObjectType::kSecretSeed:
                 {
-                    core::Result<SecretSeed::Sptrc> SecretSeedResult = LoadSecretSeed(container);
+                    core::Result<SecretSeed::Sptr> SecretSeedResult = LoadSecretSeed(container);
                     if (SecretSeedResult.HasValue())
                     {
                         return core::Result<CryptoObject::Sptrc>::FromValue(SecretSeedResult.Value());
@@ -430,8 +466,27 @@ namespace ara
                 return core::Result<PublicKey::Sptrc>::FromValue(key);
             }
 
-            core::Result<SecretSeed::Sptrc> CryptoppCryptoProvider::LoadSecretSeed(const IOInterface &container) noexcept
+            core::Result<SecretSeed::Sptr> CryptoppCryptoProvider::LoadSecretSeed(const IOInterface &container) noexcept
             {
+                const crypto::internal::IOInterfaceInternal &io = dynamic_cast<const crypto::internal::IOInterfaceInternal &>(container);
+                if (io.getKeyMaterial().size() == 0)
+                {
+                    return core::Result<SecretSeed::Sptr>::FromError(CryptoErrc::kEmptyContainer);
+                }
+                if (!io.IsValid())
+                {
+                    return core::Result<SecretSeed::Sptr>::FromError(CryptoErrc::kModifiedResource);
+                }
+                if (io.GetCryptoObjectType() != CryptoObjectType::kSecretSeed)
+                {
+                    return core::Result<SecretSeed::Sptr>::FromError(CryptoErrc::kIncompatibleObject);
+                }
+                cryp::CryptoObject::COIdentifier keyCouid;
+                keyCouid.mCouid = io.GetObjectId();
+                keyCouid.mCOType = io.GetCryptoObjectType();
+
+                SecretSeed::Sptr key = std::make_shared<IncrementalSecretSeed>(io.getProvider(), keyCouid, io.getKeyMaterial(), io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                return core::Result<SecretSeed::Sptr>::FromValue(key);
             }
 
             core::Result<SymmetricKey::Sptrc> CryptoppCryptoProvider::LoadSymmetricKey(const IOInterface &container) noexcept
