@@ -4,10 +4,12 @@
 #include "testers/crypto-key-providers-test.h"
 #include "testers/rsa-enc-dec-test.h"
 #include "testers/rng-test.h"
+#include "testers/hash-test.h"
 
 int main()
 {
-    RngTest();
+    HashTest();
+    // RngTest();
     // SecretSeedGenerateTest();
     // PublicPrivateKeysGenerateTest();
     // RsaEncDecTest();

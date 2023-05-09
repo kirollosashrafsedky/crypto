@@ -7,6 +7,7 @@
 #include "ara/crypto/cryp/rsa_encryptor_public_ctx.h"
 #include "ara/crypto/cryp/rsa_decryptor_private_ctx.h"
 #include "ara/crypto/cryp/auto_random_generator_ctx.h"
+#include "ara/crypto/cryp/sha_hash_function_ctx.h"
 #include "ara/crypto/cryp/algorithm_ids.h"
 #include "ara/crypto/common/io_interface_internal.h"
 
@@ -100,6 +101,15 @@ namespace ara
 
             core::Result<HashFunctionCtx::Sptr> CryptoppCryptoProvider::CreateHashFunctionCtx(AlgId algId) noexcept
             {
+                HashFunctionCtx::Sptr ptr;
+                if (algId == SHA3_224_ALG_ID || algId == SHA3_256_ALG_ID || algId == SHA3_384_ALG_ID || algId == SHA3_512_ALG_ID)
+                {
+                    ptr = std::make_shared<ShaHashFunctionCtx>(CryptoppCryptoProvider::getInstance(), algId);
+                }
+                if (ptr)
+                    return core::Result<HashFunctionCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<HashFunctionCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<KeyAgreementPrivateCtx::Sptr> CryptoppCryptoProvider::CreateKeyAgreementPrivateCtx(AlgId algId) noexcept

@@ -23,9 +23,6 @@ void RngTest()
 
     SecretSeed::Sptr seed = cryptoProvider->LoadSecretSeed(*seed_io).Value();
 
-    // std::string str = "Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123";
-    // std::cout << "Input text: \t" << str << std::endl;
-    // ReadOnlyMemRegion inStr(reinterpret_cast<const std::uint8_t *>(str.data()), str.size());
     rngCtx->Seed(*seed);
     Result<Vector<Byte>> generateResult = rngCtx->Generate(20);
     if (generateResult.HasValue())

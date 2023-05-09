@@ -26,6 +26,14 @@ namespace ara
                     primitiveName = INCREMENTAL_SEED_PRIMITIVE_NAME;
                 else if (this->algId == AUTO_RNG_ALG_ID)
                     primitiveName = AUTO_RNG_PRIMITIVE_NAME;
+                else if (this->algId == SHA3_224_ALG_ID)
+                    primitiveName = SHA3_224_PRIMITIVE_NAME;
+                else if (this->algId == SHA3_256_ALG_ID)
+                    primitiveName = SHA3_256_PRIMITIVE_NAME;
+                else if (this->algId == SHA3_384_ALG_ID)
+                    primitiveName = SHA3_384_PRIMITIVE_NAME;
+                else if (this->algId == SHA3_512_ALG_ID)
+                    primitiveName = SHA3_512_PRIMITIVE_NAME;
                 else
                     primitiveName = "Undefined";
             }
@@ -47,6 +55,14 @@ namespace ara
                     algId = INCREMENTAL_SEED_ALG_ID;
                 else if (this->primitiveName == AUTO_RNG_PRIMITIVE_NAME)
                     algId = AUTO_RNG_ALG_ID;
+                else if (this->primitiveName == SHA3_224_PRIMITIVE_NAME)
+                    algId = SHA3_224_ALG_ID;
+                else if (this->primitiveName == SHA3_256_PRIMITIVE_NAME)
+                    algId = SHA3_256_ALG_ID;
+                else if (this->primitiveName == SHA3_384_PRIMITIVE_NAME)
+                    algId = SHA3_384_ALG_ID;
+                else if (this->primitiveName == SHA3_512_PRIMITIVE_NAME)
+                    algId = SHA3_512_ALG_ID;
                 else
                     algId = 0;
             }
