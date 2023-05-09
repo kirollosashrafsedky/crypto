@@ -95,3 +95,25 @@ void PublicPrivateKeysGenerateTest()
 
     keyStorageProvider->CommitTransaction(transactionId);
 }
+
+void SecretSeedGenerateTest()
+{
+    InstanceSpecifier cyptoppSpecifier(CRYPTOPP_CRYPTO_PROVIDER);
+    CryptoProvider::Sptr cryptoProvider = LoadCryptoProvider(cyptoppSpecifier);
+
+    SecretSeed::Sptr seed = cryptoProvider->GenerateSeed(INCREMENTAL_SEED_ALG_ID, 0xFF, false, true).Value();
+
+    KeyStorageProvider::Sptr keyStorageProvider = LoadKeyStorageProvider();
+
+    InstanceSpecifier seed_Specifier("incremental_seed_1");
+    KeySlot::Sptr seed_slot = keyStorageProvider->LoadKeySlot(seed_Specifier).Value();
+    IOInterface::Sptr seed_io = seed_slot->Open(false, true).Value();
+
+    TransactionScope scope;
+    scope.push_back(seed_slot);
+    TransactionId transactionId = keyStorageProvider->BeginTransaction(scope).Value();
+
+    seed->Save(*seed_io);
+
+    keyStorageProvider->CommitTransaction(transactionId);
+}

@@ -3,11 +3,14 @@
 #include "testers/key-storage-provider-test.h"
 #include "testers/crypto-key-providers-test.h"
 #include "testers/rsa-enc-dec-test.h"
+#include "testers/rng-test.h"
 
 int main()
 {
+    RngTest();
+    // SecretSeedGenerateTest();
     // PublicPrivateKeysGenerateTest();
-    RsaEncDecTest();
+    // RsaEncDecTest();
     // PublicKeyLoadTest();
     // SymmetricBlockCipherTest();
     // KeyStorageProvideTest();

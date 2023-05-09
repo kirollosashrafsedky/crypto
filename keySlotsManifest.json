@@ -41,6 +41,20 @@
             "AllocateShadowCopy": "true",
             "AllowContentTypeChange": "false",
             "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "incremental_seed_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/incremental_seed_1.key",
+            "AlgId": "6",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kSecretSeed",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "50",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
         }
     ]
 }
