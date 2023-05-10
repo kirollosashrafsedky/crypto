@@ -5,6 +5,7 @@
 #include "ara/crypto/common/base_id_types.h"
 #include "ara/crypto/common/crypto_object_uid.h"
 #include "ara/crypto/cryp/cryobj/crypto_primitive_id.h"
+#include "ara/crypto/common/crypto_error_domain.h"
 #include "ara/crypto/common/io_interface.h"
 #include "ara/core/result.h"
 
@@ -17,8 +18,9 @@ namespace ara
             class CryptoObject
             {
             public:
-                using Uptrc = std::unique_ptr<const CryptoObject>;
-                using Uptr = std::unique_ptr<CryptoObject>;
+                using Sptrc = std::shared_ptr<const CryptoObject>;
+
+                using Sptr = std::shared_ptr<CryptoObject>;
 
                 struct COIdentifier
                 {
@@ -28,10 +30,22 @@ namespace ara
 
                 virtual ~CryptoObject() noexcept = default;
 
+                // todo
                 template <class ConcreteObject>
-                static core::Result<typename ConcreteObject::Uptrc> Downcast(CryptoObject::Uptrc &&object) noexcept;
+                static core::Result<typename ConcreteObject::Sptrc> Downcast(CryptoObject::Sptrc &&object) noexcept
+                {
+                    // auto derived_ptr = dynamic_cast<const ConcreteObject *>(object.get());
+                    // if (!derived_ptr)
+                    // {
+                    //     return core::Result<typename ConcreteObject::Sptrc>::FromError(CryptoErrc::kInvalidArgument);
+                    // }
 
-                virtual CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept = 0;
+                    // auto derived_object = std::shared_ptr<const ConcreteObject>(derived_ptr);
+                    // object.release();
+                    // return core::Result<typename ConcreteObject::Sptrc>::FromValue(std::move(derived_object));
+                }
+
+                virtual CryptoPrimitiveId::Sptrc GetCryptoPrimitiveId() const noexcept = 0;
 
                 virtual COIdentifier GetObjectId() const noexcept = 0;
 

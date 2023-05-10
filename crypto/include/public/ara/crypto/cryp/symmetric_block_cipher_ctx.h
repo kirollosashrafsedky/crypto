@@ -20,16 +20,19 @@ namespace ara
             class SymmetricBlockCipherCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<SymmetricBlockCipherCtx>;
+                using Sptr = std::shared_ptr<SymmetricBlockCipherCtx>;
 
-                virtual CryptoService::Uptr GetCryptoService() const noexcept = 0;
+                virtual CryptoService::Sptr GetCryptoService() const noexcept = 0;
 
                 virtual core::Result<CryptoTransform> GetTransformation() const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> ProcessBlock(ReadOnlyMemRegion in, bool suppressPadding = false) const noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> ProcessBlock(ReadOnlyMemRegion in, bool suppressPadding = false) const noexcept;
+                core::Result<ByteVector<Alloc>> ProcessBlock(ReadOnlyMemRegion in, bool suppressPadding = false) const noexcept
+                {
+                    return ProcessBlock(in, suppressPadding);
+                }
 
                 virtual core::Result<core::Vector<core::Byte>> ProcessBlocks(ReadOnlyMemRegion in) const noexcept = 0;
 

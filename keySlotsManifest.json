@@ -1,0 +1,88 @@
+{
+    "KeySlots": [
+        {
+            "InstanceSpecifier": "aes_symmetric_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/aes_symmetric_key_1.key",
+            "AlgId": "1",
+            "AllowedUsageFlags": "0x3",
+            "CryptoObjectType": "kSymmetricKey",
+            "Exportable": "false",
+            "SlotType": "kApplication",
+            "SlotCapacity": "16",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "rsa_4096_public_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/rsa_4096_public_key_1.key",
+            "AlgId": "5",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPublicKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "10000",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "rsa_4096_private_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/rsa_4096_private_key_1.key",
+            "AlgId": "5",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPrivateKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "10000",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "incremental_seed_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/incremental_seed_1.key",
+            "AlgId": "6",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kSecretSeed",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "50",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "ecdsa_sha3_256_public_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/ecdsa_sha3_256_public_key_1.key",
+            "AlgId": "12",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPublicKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "88",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "ecdsa_sha3_256_private_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/ecdsa_sha3_256_private_key_1.key",
+            "AlgId": "12",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPrivateKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "64",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        }
+    ]
+}

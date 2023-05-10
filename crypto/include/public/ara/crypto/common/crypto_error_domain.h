@@ -9,27 +9,6 @@ namespace ara
 {
     namespace crypto
     {
-        class CryptoException : public core::Exception
-        {
-        public:
-            explicit CryptoException(ara::core::ErrorCode err) noexcept;
-        };
-
-        class CryptoErrorDomain final : core::ErrorDomain
-        {
-        public:
-            using Errc = CryptoErrc;
-            using Exception = CryptoException;
-
-            void ThrowAsException(const core::ErrorCode &errorCode) const override;
-
-            constexpr CryptoErrorDomain() noexcept;
-
-            const char *Name() const noexcept override;
-
-            const char *Message(core::ErrorDomain::CodeType errorCode) const noexcept override;
-        };
-
         enum class CryptoErrc : core::ErrorDomain::CodeType
         {
             kErrorClass = 0x1000000,
@@ -71,7 +50,147 @@ namespace ara
             kAccessViolation = kRuntimeFault + 3 * kErrorSubClass
         };
 
-        constexpr core::ErrorCode MakeErrorCode(CryptoErrorDomain::Errc code, core::ErrorDomain::SupportDataType data) noexcept;
+        class CryptoException : public core::Exception
+        {
+        public:
+            explicit CryptoException(ara::core::ErrorCode err) noexcept
+                : core::Exception(std::move(err))
+            {
+            }
+        };
+
+        class CryptoErrorDomain final : public core::ErrorDomain
+        {
+            static const ErrorDomain::IdType kId{0x8000000000000001};
+
+        public:
+            using Errc = CryptoErrc;
+            using Exception = CryptoException;
+
+            void ThrowAsException(const core::ErrorCode &errorCode) const override
+            {
+                core::ifc::ThrowOrTerminate<Exception>(errorCode);
+            }
+
+            constexpr CryptoErrorDomain() noexcept
+                : ErrorDomain(kId)
+            {
+            }
+
+            const char *Name() const noexcept override
+            {
+                return "Crypto";
+            }
+
+            const char *Message(core::ErrorDomain::CodeType errorCode) const noexcept override
+            {
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic error "-Wswitch-enum"
+#endif
+
+                Errc const code = static_cast<Errc>(errorCode);
+                switch (code)
+                {
+                case CryptoErrc::kErrorClass:
+                    return "kErrorClass | kResourceFault";
+                case CryptoErrc::kErrorSubClass:
+                    return "kErrorSubClass";
+                case CryptoErrc::kErrorSubSubClass:
+                    return "kErrorSubSubClass";
+                case CryptoErrc::kBusyResource:
+                    return "kBusyResource";
+                case CryptoErrc::kInsufficientResource:
+                    return "kInsufficientResource";
+                case CryptoErrc::kUnreservedResource:
+                    return "kUnreservedResource";
+                case CryptoErrc::kModifiedResource:
+                    return "kModifiedResource";
+                case CryptoErrc::kLogicFault:
+                    return "kLogicFault";
+                case CryptoErrc::kInvalidArgument:
+                    return "kInvalidArgument";
+                case CryptoErrc::kUnknownIdentifier:
+                    return "kUnknownIdentifier";
+                case CryptoErrc::kInsufficientCapacity:
+                    return "kInsufficientCapacity";
+                case CryptoErrc::kInvalidInputSize:
+                    return "kInvalidInputSize";
+                case CryptoErrc::kIncompatibleArguments:
+                    return "kIncompatibleArguments";
+                case CryptoErrc::kInOutBuffersIntersect:
+                    return "kInOutBuffersIntersect";
+                case CryptoErrc::kBelowBoundary:
+                    return "kBelowBoundary";
+                case CryptoErrc::kAboveBoundary:
+                    return "kAboveBoundary";
+                case CryptoErrc::kAuthTagNotValid:
+                    return "kAuthTagNotValid";
+                case CryptoErrc::kUnsupported:
+                    return "kUnsupported";
+                case CryptoErrc::kInvalidUsageOrder:
+                    return "kInvalidUsageOrder";
+                case CryptoErrc::kUninitializedContext:
+                    return "kUninitializedContext";
+                case CryptoErrc::kProcessingNotStarted:
+                    return "kProcessingNotStarted";
+                case CryptoErrc::kProcessingNotFinished:
+                    return "kProcessingNotFinished";
+                case CryptoErrc::kRuntimeFault:
+                    return "kRuntimeFault";
+                case CryptoErrc::kUnsupportedFormat:
+                    return "kUnsupportedFormat";
+                case CryptoErrc::kBruteForceRisk:
+                    return "kBruteForceRisk";
+                case CryptoErrc::kContentRestrictions:
+                    return "kContentRestrictions";
+                case CryptoErrc::kBadObjectReference:
+                    return "kBadObjectReference";
+                case CryptoErrc::kContentDuplication:
+                    return "kContentDuplication";
+                case CryptoErrc::kUnexpectedValue:
+                    return "kUnexpectedValue";
+                case CryptoErrc::kIncompatibleObject:
+                    return "kIncompatibleObject";
+                case CryptoErrc::kIncompleteArgState:
+                    return "kIncompleteArgState";
+                case CryptoErrc::kEmptyContainer:
+                    return "kEmptyContainer";
+                case CryptoErrc::kMissingArgument:
+                    return "kMissingArgument";
+                case CryptoErrc::kBadObjectType:
+                    return "kBadObjectType";
+                case CryptoErrc::kUsageViolation:
+                    return "kUsageViolation";
+                case CryptoErrc::kAccessViolation:
+                    return "kAccessViolation";
+                default:
+                    return "Unknown error";
+                }
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+            }
+        };
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+        namespace internal
+        {
+            static const CryptoErrorDomain g_cryptoErrorDomain;
+        }
+
+        inline constexpr const core::ErrorDomain &GetCryptoDomain()
+        {
+            return internal::g_cryptoErrorDomain;
+        }
+
+        constexpr core::ErrorCode MakeErrorCode(CryptoErrc code, core::ErrorDomain::SupportDataType data) noexcept
+        {
+            return core::ErrorCode(static_cast<core::ErrorDomain::CodeType>(code), GetCryptoDomain(), data);
+        }
     }
 }
 

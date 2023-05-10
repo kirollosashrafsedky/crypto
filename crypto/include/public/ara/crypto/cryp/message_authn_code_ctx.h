@@ -17,13 +17,13 @@ namespace ara
             class MessageAuthnCodeCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<MessageAuthnCodeCtx>;
+                using Sptr = std::shared_ptr<MessageAuthnCodeCtx>;
 
                 virtual core::Result<bool> Check(const Signature &expected) const noexcept = 0;
 
-                virtual core::Result<Signature::Uptrc> Finish(bool makeSignatureObject = false) noexcept = 0;
+                virtual core::Result<Signature::Sptrc> Finish(bool makeSignatureObject = false) noexcept = 0;
 
-                virtual DigestService::Uptr GetDigestService() const noexcept = 0;
+                virtual DigestService::Sptr GetDigestService() const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> GetDigest(std::size_t offset = 0) const noexcept = 0;
 

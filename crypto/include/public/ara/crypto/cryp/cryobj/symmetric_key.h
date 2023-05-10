@@ -14,7 +14,7 @@ namespace ara
             class SymmetricKey : public RestrictedUseObject
             {
             public:
-                using Uptrc = std::unique_ptr<const SymmetricKey>;
+                using Sptrc = std::shared_ptr<const SymmetricKey>;
 
                 static const CryptoObjectType kObjectType = CryptoObjectType::kSymmetricKey;
             };

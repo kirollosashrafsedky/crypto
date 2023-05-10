@@ -1,8 +1,15 @@
 #ifndef _HASH_FUNCTION_CTX_H_
 #define _HASH_FUNCTION_CTX_H_
 
+#include <memory>
+#include "ara/crypto/common/base_id_types.h"
 #include "ara/crypto/cryp/crypto_context.h"
 #include "ara/crypto/cryp/digest_service.h"
+#include "ara/core/result.h"
+#include "ara/core/utility.h"
+#include "ara/core/vector.h"
+#include "ara/crypto/common/mem_region.h"
+#include "ara/crypto/cryp/cryobj/secret_seed.h"
 
 namespace ara
 {
@@ -13,11 +20,11 @@ namespace ara
             class HashFunctionCtx : public CryptoContext
             {
             public:
-                using Uptr = std::unique_ptr<HashFunctionCtx>;
+                using Sptr = std::shared_ptr<HashFunctionCtx>;
 
                 virtual core::Result<core::Vector<core::Byte>> Finish() noexcept = 0;
 
-                virtual DigestService::Uptr GetDigestService() const noexcept = 0;
+                virtual DigestService::Sptr GetDigestService() const noexcept = 0;
 
                 virtual core::Result<core::Vector<core::Byte>> GetDigest(std::size_t offset = 0) const noexcept = 0;
 

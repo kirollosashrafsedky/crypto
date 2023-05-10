@@ -12,7 +12,7 @@ namespace ara
             class Signature : public CryptoObject
             {
             public:
-                using Uptrc = std::unique_ptr<const Signature>;
+                using Sptrc = std::shared_ptr<const Signature>;
 
                 static const CryptoObjectType kObjectType = CryptoObjectType::kSignature;
 

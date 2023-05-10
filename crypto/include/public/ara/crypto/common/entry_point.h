@@ -7,6 +7,7 @@
 #include "ara/core/result.h"
 #include "ara/core/vector.h"
 #include "ara/crypto/cryp/crypto_provider.h"
+#include "ara/crypto/keys/key_storage_provider.h"
 
 namespace ara
 {
@@ -14,16 +15,16 @@ namespace ara
     {
         struct SecureCounter
         {
-            std::uint64_t SecureCounter::mLSQW;
+            std::uint64_t mLSQW;
 
-            std::uint64_t SecureCounter::mMSQW;
+            std::uint64_t mMSQW;
         };
 
-        cryp::CryptoProvider::Uptr LoadCryptoProvider(const core::InstanceSpecifier &iSpecify) noexcept;
+        cryp::CryptoProvider::Sptr LoadCryptoProvider(const core::InstanceSpecifier &iSpecify) noexcept;
 
-        // keys::KeyStorageProvider::Uptr LoadKeyStorageProvider() noexcept;
+        keys::KeyStorageProvider::Sptr LoadKeyStorageProvider() noexcept;
 
-        // x509::X509Provider::Uptr LoadX509Provider() noexcept;
+        // x509::X509Provider::Sptr LoadX509Provider() noexcept;
 
         core::Result<core::Vector<core::Byte>> GenerateRandomData(std::uint32_t count) noexcept;
 

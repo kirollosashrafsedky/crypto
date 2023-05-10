@@ -18,7 +18,7 @@ namespace ara
 
                 virtual ~CryptoContext() noexcept = default;
 
-                virtual CryptoPrimitiveId::Uptr GetCryptoPrimitiveId() const noexcept = 0;
+                virtual CryptoPrimitiveId::Sptrc GetCryptoPrimitiveId() const noexcept = 0;
 
                 virtual bool IsInitialized() const noexcept = 0;
 
@@ -26,7 +26,7 @@ namespace ara
 
                 CryptoContext &operator=(CryptoContext &&other) = default;
 
-                virtual CryptoProvider &MyProvider() const noexcept = 0;
+                virtual const CryptoProvider &MyProvider() const noexcept = 0;
             };
         }
     }

@@ -13,7 +13,7 @@ namespace ara
             class PublicKey : public RestrictedUseObject
             {
             public:
-                using Uptrc = std::unique_ptr<const PublicKey>;
+                using Sptrc = std::shared_ptr<const PublicKey>;
 
                 static const CryptoObjectType kObjectType = CryptoObjectType::kPublicKey;
 
@@ -22,7 +22,9 @@ namespace ara
                 virtual core::Result<core::Vector<core::Byte>> HashPublicKey(HashFunctionCtx &hashFunc) const noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> HashPublicKey(HashFunctionCtx &hashFunc) const noexcept;
+                core::Result<ByteVector<Alloc>> HashPublicKey(HashFunctionCtx &hashFunc) const noexcept
+                {
+                }
             };
         }
     }

@@ -14,8 +14,10 @@ namespace ara
             class RestrictedUseObject : public CryptoObject
             {
             public:
-                using Uptrc = std::unique_ptr<const RestrictedUseObject>;
+                using Sptrc = std::shared_ptr<const RestrictedUseObject>;
+
                 using Usage = AllowedUsageFlags;
+
                 virtual Usage GetAllowedUsage() const noexcept = 0;
             };
         }

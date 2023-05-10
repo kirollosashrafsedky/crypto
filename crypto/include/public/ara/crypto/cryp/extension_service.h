@@ -16,7 +16,7 @@ namespace ara
             class ExtensionService
             {
             public:
-                using Uptr = std::unique_ptr<ExtensionService>;
+                using Sptr = std::shared_ptr<ExtensionService>;
 
                 virtual ~ExtensionService() noexcept = default;
 

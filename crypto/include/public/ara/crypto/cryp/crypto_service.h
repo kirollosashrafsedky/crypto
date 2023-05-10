@@ -15,7 +15,7 @@ namespace ara
             class CryptoService : public ExtensionService
             {
             public:
-                using Uptr = std::unique_ptr<CryptoService>;
+                using Sptr = std::shared_ptr<CryptoService>;
 
                 virtual std::size_t GetBlockSize() const noexcept = 0;
 
