@@ -41,9 +41,9 @@ namespace ara
 
                     std::shared_ptr<const RsaPublicKey> key;
 
-                    std::shared_ptr<RsaEncryptorCryptoService> rsaCryptoService;
-
                     bool isSetKeyCalled;
+
+                    std::shared_ptr<RsaEncryptorCryptoService> rsaCryptoService;
                 };
             }
         }

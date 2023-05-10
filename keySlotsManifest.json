@@ -55,6 +55,34 @@
             "AllocateShadowCopy": "true",
             "AllowContentTypeChange": "false",
             "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "ecdsa_sha3_256_public_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/ecdsa_sha3_256_public_key_1.key",
+            "AlgId": "12",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPublicKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "88",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
+        },
+        {
+            "InstanceSpecifier": "ecdsa_sha3_256_private_key_1",
+            "CryptoProvider": "CryptoppCryptoProvider",
+            "KeyMaterialPath": "keyslots\/ecdsa_sha3_256_private_key_1.key",
+            "AlgId": "12",
+            "AllowedUsageFlags": "0xff",
+            "CryptoObjectType": "kPrivateKey",
+            "Exportable": "true",
+            "SlotType": "kApplication",
+            "SlotCapacity": "64",
+            "AllocateShadowCopy": "true",
+            "AllowContentTypeChange": "false",
+            "MaxUpdateAllowed": "-1"
         }
     ]
 }

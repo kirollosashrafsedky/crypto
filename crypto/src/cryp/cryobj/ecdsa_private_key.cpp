@@ -2,7 +2,7 @@
 #include "ara/crypto/cryp/algorithm_ids.h"
 #include "ara/crypto/common/io_interface_internal.h"
 #include "ara/crypto/common/mem_io_interface.h"
-#include "ara/crypto/cryp/cryobj/rsa_public_key.h"
+#include "ara/crypto/cryp/cryobj/ecdsa_public_key.h"
 
 namespace ara
 {
@@ -116,7 +116,7 @@ namespace ara
                 keyCouid.mCouid = this->identifier.mCouid;
                 keyCouid.mCOType = CryptoObjectType::kPublicKey;
 
-                PublicKey::Sptrc key = std::make_shared<RsaPublicKey>(this->cryptoProvider, keyCouid, this->primitiveId->GetPrimitiveId(), keyData, this->allowedUsageFlags, this->isSession, this->isExportable);
+                PublicKey::Sptrc key = std::make_shared<EcdsaPublicKey>(this->cryptoProvider, keyCouid, this->primitiveId->GetPrimitiveId(), publicKey, this->allowedUsageFlags, this->isSession, this->isExportable);
                 return core::Result<PublicKey::Sptrc>::FromValue(key);
             }
 

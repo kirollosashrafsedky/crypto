@@ -108,7 +108,7 @@ namespace ara
                 }
 
                 IncrementalSecretSeed::Sptr seed = std::make_shared<IncrementalSecretSeed>(this->cryptoProvider, this->identifier, newData, this->allowedUsageFlags, true, false);
-                core::Result<SecretSeed::Sptr>::FromValue(seed);
+                return core::Result<SecretSeed::Sptr>::FromValue(seed);
             }
 
             core::Result<void> IncrementalSecretSeed::JumpFrom(const SecretSeed &from, std::int64_t steps) noexcept

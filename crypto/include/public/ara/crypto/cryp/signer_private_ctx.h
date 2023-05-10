@@ -31,7 +31,9 @@ namespace ara
                 virtual core::Result<Signature::Sptrc> SignPreHashed(AlgId hashAlgId, ReadOnlyMemRegion hashValue, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> Sign(ReadOnlyMemRegion value, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept;
+                core::Result<ByteVector<Alloc>> Sign(ReadOnlyMemRegion value, ReadOnlyMemRegion context = ReadOnlyMemRegion()) const noexcept
+                {
+                }
             };
         }
     }

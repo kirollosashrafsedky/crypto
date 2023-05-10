@@ -5,10 +5,13 @@
 #include "testers/rsa-enc-dec-test.h"
 #include "testers/rng-test.h"
 #include "testers/hash-test.h"
+#include "testers/ecdsa-sign-verify-test.h"
 
 int main()
 {
-    HashTest();
+    EcdsaSignVerifyTest();
+    // EcdsaPublicPrivateKeysGenerateTest();
+    // HashTest();
     // RngTest();
     // SecretSeedGenerateTest();
     // PublicPrivateKeysGenerateTest();

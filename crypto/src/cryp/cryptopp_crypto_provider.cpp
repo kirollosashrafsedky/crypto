@@ -10,6 +10,8 @@
 #include "ara/crypto/cryp/sha_hash_function_ctx.h"
 #include "ara/crypto/cryp/algorithm_ids.h"
 #include "ara/crypto/common/io_interface_internal.h"
+#include "ara/crypto/cryp/ecdsa_signer_private_ctx.h"
+#include "ara/crypto/cryp/ecdsa_verifier_public_ctx.h"
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/osrng.h>
@@ -162,6 +164,15 @@ namespace ara
 
             core::Result<SignerPrivateCtx::Sptr> CryptoppCryptoProvider::CreateSignerPrivateCtx(AlgId algId) noexcept
             {
+                SignerPrivateCtx::Sptr ptr;
+                if (algId == ECDSA_SHA3_256_ALG_ID)
+                {
+                    ptr = std::make_shared<EcdsaSignerPrivateCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<SignerPrivateCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<SignerPrivateCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<StreamCipherCtx::Sptr> CryptoppCryptoProvider::CreateStreamCipherCtx(AlgId algId) noexcept
@@ -187,6 +198,15 @@ namespace ara
 
             core::Result<VerifierPublicCtx::Sptr> CryptoppCryptoProvider::CreateVerifierPublicCtx(AlgId algId) noexcept
             {
+                VerifierPublicCtx::Sptr ptr;
+                if (algId == ECDSA_SHA3_256_ALG_ID)
+                {
+                    ptr = std::make_shared<EcdsaVerifierPublicCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<VerifierPublicCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<VerifierPublicCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<core::Vector<core::Byte>> CryptoppCryptoProvider::ExportPublicObject(const IOInterface &container, Serializable::FormatId formatId) noexcept
@@ -213,14 +233,12 @@ namespace ara
                     keySize = RSA_2048_KEY_SIZE;
                 else if (algId == RSA_4096_ALG_ID)
                     keySize = RSA_4096_KEY_SIZE;
+                else if (algId == ECDSA_SHA3_256_ALG_ID)
+                    keySize = ECDSA_SHA3_256_PRIVATE_PAYLOAD_SIZE;
                 else
                     return core::Result<PrivateKey::Sptrc>::FromError(CryptoErrc::kUnknownIdentifier);
 
                 CryptoPP::AutoSeededRandomPool prng;
-                CryptoPP::InvertibleRSAFunction rsaParams;
-                rsaParams.GenerateRandomWithKeySize(prng, keySize);
-
-                CryptoPP::RSA::PrivateKey privateKey(rsaParams);
 
                 cryp::CryptoObject::COIdentifier keyCouid;
                 keyCouid.mCOType = CryptoObjectType::kPrivateKey;
@@ -228,7 +246,22 @@ namespace ara
                 prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&keyCouid.mCouid.mGeneratorUid.mQwordLs), sizeof(keyCouid.mCouid.mGeneratorUid.mQwordLs));
                 prng.GenerateBlock(reinterpret_cast<CryptoPP::byte *>(&keyCouid.mCouid.mGeneratorUid.mQwordMs), sizeof(keyCouid.mCouid.mGeneratorUid.mQwordMs));
 
-                key = std::make_shared<RsaPrivateKey>(CryptoppCryptoProvider::getInstance(), keyCouid, algId, privateKey, allowedUsage, isSession, isExportable);
+                if (algId == ECDSA_SHA3_256_ALG_ID)
+                {
+                    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA3_256>::PrivateKey privateKey;
+                    privateKey.Initialize(prng, CryptoPP::ASN1::secp256k1());
+
+                    key = std::make_shared<EcdsaPrivateKey>(CryptoppCryptoProvider::getInstance(), keyCouid, algId, privateKey, allowedUsage, isSession, isExportable);
+                }
+                else
+                {
+                    CryptoPP::InvertibleRSAFunction rsaParams;
+                    rsaParams.GenerateRandomWithKeySize(prng, keySize);
+
+                    CryptoPP::RSA::PrivateKey privateKey(rsaParams);
+                    key = std::make_shared<RsaPrivateKey>(CryptoppCryptoProvider::getInstance(), keyCouid, algId, privateKey, allowedUsage, isSession, isExportable);
+                }
+
                 return core::Result<PrivateKey::Sptrc>::FromValue(key);
             }
 
@@ -433,15 +466,25 @@ namespace ara
                 keyCouid.mCouid = io.GetObjectId();
                 keyCouid.mCOType = io.GetCryptoObjectType();
 
-                CryptoPP::RSA::PrivateKey keyData;
+                PrivateKey::Sptrc key;
 
                 CryptoPP::ByteQueue byteQueue;
                 byteQueue.Put(reinterpret_cast<CryptoPP::byte *>(io.getKeyMaterial().data()), io.getKeyMaterial().size());
                 byteQueue.MessageEnd();
 
-                keyData.Load(byteQueue);
+                if (io.GetPrimitiveId() == ECDSA_SHA3_256_ALG_ID)
+                {
+                    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA3_256>::PrivateKey keyData;
+                    keyData.Load(byteQueue);
+                    key = std::make_shared<EcdsaPrivateKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                }
+                else
+                {
+                    CryptoPP::RSA::PrivateKey keyData;
+                    keyData.Load(byteQueue);
+                    key = std::make_shared<RsaPrivateKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                }
 
-                PrivateKey::Sptrc key = std::make_shared<RsaPrivateKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
                 return core::Result<PrivateKey::Sptrc>::FromValue(key);
             }
 
@@ -464,15 +507,25 @@ namespace ara
                 keyCouid.mCouid = io.GetObjectId();
                 keyCouid.mCOType = io.GetCryptoObjectType();
 
-                CryptoPP::RSA::PublicKey keyData;
+                PublicKey::Sptrc key;
 
                 CryptoPP::ByteQueue byteQueue;
                 byteQueue.Put(reinterpret_cast<CryptoPP::byte *>(io.getKeyMaterial().data()), io.getKeyMaterial().size());
                 byteQueue.MessageEnd();
 
-                keyData.Load(byteQueue);
+                if (io.GetPrimitiveId() == ECDSA_SHA3_256_ALG_ID)
+                {
+                    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA3_256>::PublicKey keyData;
+                    keyData.Load(byteQueue);
+                    key = std::make_shared<EcdsaPublicKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                }
+                else
+                {
+                    CryptoPP::RSA::PublicKey keyData;
+                    keyData.Load(byteQueue);
+                    key = std::make_shared<RsaPublicKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
+                }
 
-                PublicKey::Sptrc key = std::make_shared<RsaPublicKey>(io.getProvider(), keyCouid, io.GetPrimitiveId(), keyData, io.GetAllowedUsage(), io.IsObjectSession(), io.IsObjectExportable());
                 return core::Result<PublicKey::Sptrc>::FromValue(key);
             }
 

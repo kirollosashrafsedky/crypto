@@ -49,7 +49,7 @@ namespace ara
                 CryptoPP::SecByteBlock scratch(count);
 
                 rng.GenerateBlock(scratch, scratch.size());
-                for (int i = 0; i < scratch.size(); i++)
+                for (size_t i = 0; i < scratch.size(); i++)
                 {
                     cipher.push_back(static_cast<core::Byte>(scratch[i]));
                 }
@@ -58,7 +58,7 @@ namespace ara
 
             ExtensionService::Sptr AutoRandomGeneratorCtx::GetExtensionService() const noexcept
             {
-                this->autoRngExtensionService;
+                return this->autoRngExtensionService;
             }
 
             bool AutoRandomGeneratorCtx::Seed(ReadOnlyMemRegion seed) noexcept

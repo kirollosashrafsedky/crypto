@@ -117,3 +117,32 @@ void SecretSeedGenerateTest()
 
     keyStorageProvider->CommitTransaction(transactionId);
 }
+
+void EcdsaPublicPrivateKeysGenerateTest()
+{
+    InstanceSpecifier cyptoppSpecifier(CRYPTOPP_CRYPTO_PROVIDER);
+    CryptoProvider::Sptr cryptoProvider = LoadCryptoProvider(cyptoppSpecifier);
+
+    PrivateKey::Sptrc privateKey = cryptoProvider->GeneratePrivateKey(ECDSA_SHA3_256_ALG_ID, 0xFF, false, true).Value();
+    PublicKey::Sptrc publicKey = privateKey->GetPublicKey().Value();
+
+    KeyStorageProvider::Sptr keyStorageProvider = LoadKeyStorageProvider();
+
+    InstanceSpecifier public_key_1_Specifier("ecdsa_sha3_256_public_key_1");
+    KeySlot::Sptr public_key_1_slot = keyStorageProvider->LoadKeySlot(public_key_1_Specifier).Value();
+    IOInterface::Sptr public_key_1_io = public_key_1_slot->Open(false, true).Value();
+
+    InstanceSpecifier private_key_1_Specifier("ecdsa_sha3_256_private_key_1");
+    KeySlot::Sptr private_key_1_slot = keyStorageProvider->LoadKeySlot(private_key_1_Specifier).Value();
+    IOInterface::Sptr private_key_1_io = private_key_1_slot->Open(false, true).Value();
+
+    TransactionScope scope;
+    scope.push_back(public_key_1_slot);
+    scope.push_back(private_key_1_slot);
+    TransactionId transactionId = keyStorageProvider->BeginTransaction(scope).Value();
+
+    publicKey->Save(*public_key_1_io);
+    privateKey->Save(*private_key_1_io);
+
+    keyStorageProvider->CommitTransaction(transactionId);
+}
