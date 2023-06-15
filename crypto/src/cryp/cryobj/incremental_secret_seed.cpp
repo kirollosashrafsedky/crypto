@@ -1,6 +1,6 @@
-#include "ara/crypto/cryp/cryobj/incremental_secret_seed.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
-#include "ara/crypto/common/io_interface_internal.h"
+#include "cryp/cryobj/incremental_secret_seed.h"
+#include "cryp/algorithm_ids.h"
+#include "common/io_interface_internal.h"
 
 namespace ara
 {
@@ -156,7 +156,7 @@ namespace ara
 
             SecretSeed &IncrementalSecretSeed::operator=(ReadOnlyMemRegion source) noexcept
             {
-                core::Vector<core::Byte> newData(source.begin(), source.end());
+                core::Vector<core::Byte> newData(reinterpret_cast<const core::Byte *>(source.begin()), reinterpret_cast<const core::Byte *>(source.end()));
                 this->data = newData;
                 return *this;
             }

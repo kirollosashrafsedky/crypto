@@ -9,15 +9,16 @@
 
 int main()
 {
-    EcdsaSignVerifyTest();
-    // EcdsaPublicPrivateKeysGenerateTest();
-    // HashTest();
-    // RngTest();
-    // SecretSeedGenerateTest();
-    // PublicPrivateKeysGenerateTest();
-    // RsaEncDecTest();
-    // PublicKeyLoadTest();
-    // SymmetricBlockCipherTest();
-    // KeyStorageProvideTest();
     // cryptoKeyProvidersTest();
+    // PublicPrivateKeysGenerateTest();
+    // SecretSeedGenerateTest();
+    // // PublicKeyLoadTest();
+    // EcdsaPublicPrivateKeysGenerateTest();
+    // // V2xKeysGeneration();
+    // EcdsaSignVerifyTest();
+    // HashTest();
+    // KeyStorageProvideTest();
+    // RngTest();
+    // RsaEncDecTest();
+    // SymmetricBlockCipherTest();
 }

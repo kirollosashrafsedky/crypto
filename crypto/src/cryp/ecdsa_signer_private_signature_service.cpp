@@ -1,5 +1,5 @@
-#include "ara/crypto/cryp/ecdsa_signer_private_signature_service.h"
-#include "ara/crypto/cryp/ecdsa_signer_private_ctx.h"
+#include "cryp/ecdsa_signer_private_signature_service.h"
+#include "cryp/ecdsa_signer_private_ctx.h"
 
 namespace ara
 {

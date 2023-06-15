@@ -1,6 +1,6 @@
-#include "ara/crypto/common/entry_point.h"
-#include "ara/crypto/cryp/cryptopp_crypto_provider.h"
-#include "ara/crypto/keys/main_key_storage_provider.h"
+#include "common/entry_point.h"
+#include "cryp/cryptopp_crypto_provider.h"
+#include "keys/main_key_storage_provider.h"
 
 namespace ara
 {

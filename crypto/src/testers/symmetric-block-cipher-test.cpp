@@ -1,5 +1,5 @@
-#include "ara/crypto/common/entry_point.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
+#include "common/entry_point.h"
+#include "cryp/algorithm_ids.h"
 
 using namespace ara;
 using namespace ara::core;
@@ -22,7 +22,7 @@ void SymmetricBlockCipherTest()
 
     SymmetricKey::Sptrc symmetricKey_1 = cryptoProvider->LoadSymmetricKey(*keySlot_1Io).Value();
 
-    std::string str = "Hello, world!123";
+    std::string str = "Hello, world!123Hello, world!123Hello, world!123Hello, world!123Hello, world!123";
     std::cout << "Input text: \t" << str << std::endl;
     ReadOnlyMemRegion inStr(reinterpret_cast<const std::uint8_t *>(str.data()), str.size());
 

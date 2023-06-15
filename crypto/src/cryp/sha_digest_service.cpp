@@ -1,5 +1,5 @@
-#include "ara/crypto/cryp/sha_digest_service.h"
-#include "ara/crypto/cryp/sha_hash_function_ctx.h"
+#include "cryp/sha_digest_service.h"
+#include "cryp/sha_hash_function_ctx.h"
 
 namespace ara
 {

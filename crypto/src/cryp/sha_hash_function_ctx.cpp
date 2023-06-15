@@ -1,7 +1,7 @@
-#include "ara/crypto/cryp/sha_hash_function_ctx.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
-#include "ara/crypto/cryp/cryptopp_crypto_provider.h"
-#include "ara/crypto/common/mem_trusted_container.h"
+#include "cryp/sha_hash_function_ctx.h"
+#include "cryp/algorithm_ids.h"
+#include "cryp/cryptopp_crypto_provider.h"
+#include "common/mem_trusted_container.h"
 
 namespace ara
 {
@@ -42,8 +42,8 @@ namespace ara
                 {
                     return core::Result<core::Vector<core::Byte>>::FromError(CryptoErrc::kInvalidUsageOrder);
                 }
-                core::Vector<CryptoPP::byte> digest(this->sha->DigestSize());
-                this->sha->Final(digest.data());
+                core::Vector<core::Byte> digest(this->sha->DigestSize());
+                this->sha->Final(reinterpret_cast<CryptoPP::byte *>(digest.data()));
                 core::Vector<core::Byte> result(digest.begin(), digest.end());
                 this->currentDigest = result;
                 this->hashUpdated = false;

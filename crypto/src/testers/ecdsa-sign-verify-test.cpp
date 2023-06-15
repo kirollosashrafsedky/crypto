@@ -1,5 +1,5 @@
-#include "ara/crypto/common/entry_point.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
+#include "common/entry_point.h"
+#include "cryp/algorithm_ids.h"
 
 using namespace ara;
 using namespace ara::core;
@@ -40,6 +40,8 @@ void EcdsaSignVerifyTest()
     if (signResult.HasValue())
     {
         Vector<Byte> signatureVec = signResult.Value();
+        std::cout << signatureVec.size() << std::endl;
+
         ReadOnlyMemRegion signature(reinterpret_cast<const std::uint8_t *>(signatureVec.data()), signatureVec.size());
 
         Result<bool> verifyResult = verifierPublicCtx->Verify(inStr, signature);

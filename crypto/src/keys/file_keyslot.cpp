@@ -1,10 +1,10 @@
 #define BOOST_BIND_GLOBAL_PLACEHOLDERS
 
-#include "ara/crypto/keys/file_keyslot.h"
-#include "ara/crypto/common/crypto_error_domain.h"
-#include "ara/crypto/cryp/cryptopp_crypto_provider.h"
-#include "ara/crypto/common/entry_point.h"
-#include "ara/crypto/keys/main_key_storage_provider.h"
+#include "keys/file_keyslot.h"
+#include "common/crypto_error_domain.h"
+#include "cryp/cryptopp_crypto_provider.h"
+#include "common/entry_point.h"
+#include "keys/main_key_storage_provider.h"
 #include <iostream>
 #include <fstream>
 #include <boost/property_tree/json_parser.hpp>
@@ -145,9 +145,9 @@ namespace ara
                     std::string mVersionStampStr(objectUidStr.begin() + 32, objectUidStr.end());
 
                     CryptoObjectUid objectUid;
-                    objectUid.mGeneratorUid.mQwordMs = std::stoul(mQwordMsStr, nullptr, 16);
-                    objectUid.mGeneratorUid.mQwordLs = std::stoul(mQwordLsStr, nullptr, 16);
-                    objectUid.mVersionStamp = std::stoul(mVersionStampStr, nullptr, 16);
+                    objectUid.mGeneratorUid.mQwordMs = std::stoull(mQwordMsStr, nullptr, 16);
+                    objectUid.mGeneratorUid.mQwordLs = std::stoull(mQwordLsStr, nullptr, 16);
+                    objectUid.mVersionStamp = std::stoull(mVersionStampStr, nullptr, 16);
 
                     this->keySlotContentProps.mObjectUid = objectUid;
 

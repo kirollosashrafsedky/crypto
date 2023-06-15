@@ -1,0 +1,108 @@
+{
+    "resources": [
+        {
+            "name": "cert_1_public",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_2_public",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_3_public",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_4_public",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_1_private",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_2_private",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_3_private",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        },
+        {
+            "name": "cert_4_private",
+            "permissions": [
+                {
+                    "username": "v2x_config_1",
+                    "access": "read"
+                },
+                {
+                    "username": "Crypto_Test",
+                    "access": "read"
+                }
+            ]
+        }
+    ]
+}
