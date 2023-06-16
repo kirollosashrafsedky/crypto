@@ -19,9 +19,9 @@ namespace ara
             public:
                 using Sptr = std::shared_ptr<MessageAuthnCodeCtx>;
 
-                virtual core::Result<bool> Check(const Signature &expected) const noexcept = 0;
+                virtual core::Result<bool> Check(const core::Vector<core::Byte> &expected) const noexcept = 0;
 
-                virtual core::Result<Signature::Sptrc> Finish(bool makeSignatureObject = false) noexcept = 0;
+                virtual core::Result<core::Vector<core::Byte>> Finish(bool makeSignatureObject = false) noexcept = 0;
 
                 virtual DigestService::Sptr GetDigestService() const noexcept = 0;
 

@@ -12,6 +12,7 @@
 #include "common/io_interface_internal.h"
 #include "cryp/ecdsa_signer_private_ctx.h"
 #include "cryp/ecdsa_verifier_public_ctx.h"
+#include "cryp/hmac_message_authn_code_ctx.h"
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/osrng.h>
@@ -132,6 +133,15 @@ namespace ara
 
             core::Result<MessageAuthnCodeCtx::Sptr> CryptoppCryptoProvider::CreateMessageAuthnCodeCtx(AlgId algId) noexcept
             {
+                MessageAuthnCodeCtx::Sptr ptr;
+                if (algId == HMAC_SHA256_ALG_ID)
+                {
+                    ptr = std::make_shared<HmacMessageAuthnCodeCtx>(CryptoppCryptoProvider::getInstance(), algId);
+                }
+                if (ptr)
+                    return core::Result<MessageAuthnCodeCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<MessageAuthnCodeCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<MsgRecoveryPublicCtx::Sptr> CryptoppCryptoProvider::CreateMsgRecoveryPublicCtx(AlgId algId) noexcept

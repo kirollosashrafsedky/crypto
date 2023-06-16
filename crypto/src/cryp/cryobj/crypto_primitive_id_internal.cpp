@@ -34,6 +34,8 @@ namespace ara
                     primitiveName = SHA3_384_PRIMITIVE_NAME;
                 else if (this->algId == SHA3_512_ALG_ID)
                     primitiveName = SHA3_512_PRIMITIVE_NAME;
+                else if (this->algId == HMAC_SHA256_ALG_ID)
+                    primitiveName = HMAC_SHA256_PRIMITIVE_NAME;
                 else
                     primitiveName = "Undefined";
             }
@@ -63,6 +65,8 @@ namespace ara
                     algId = SHA3_384_ALG_ID;
                 else if (this->primitiveName == SHA3_512_PRIMITIVE_NAME)
                     algId = SHA3_512_ALG_ID;
+                else if (this->primitiveName == HMAC_SHA256_PRIMITIVE_NAME)
+                    algId = HMAC_SHA256_ALG_ID;
                 else
                     algId = 0;
             }
