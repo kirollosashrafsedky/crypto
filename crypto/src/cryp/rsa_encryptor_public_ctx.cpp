@@ -1,4 +1,4 @@
-#include "ara/crypto/cryp/rsa_encryptor_public_ctx.h"
+#include "cryp/rsa_encryptor_public_ctx.h"
 
 namespace ara
 {
@@ -52,8 +52,8 @@ namespace ara
                 CryptoPP::Integer p((CryptoPP::byte *)input.data(), input.size());
                 CryptoPP::Integer c = this->key->getKeyData().ApplyFunction(p);
 
-                std::vector<CryptoPP::byte> byteArray(c.ByteCount());
-                c.Encode(byteArray.data(), byteArray.size());
+                std::vector<core::Byte> byteArray(c.ByteCount());
+                c.Encode(reinterpret_cast<CryptoPP::byte *>(byteArray.data()), byteArray.size());
 
                 // Copy the byte array to a core::Vector<core::Byte>
                 core::Vector<core::Byte> byteVector(byteArray.begin(), byteArray.end());

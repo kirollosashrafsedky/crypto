@@ -1,7 +1,7 @@
 #define BOOST_BIND_GLOBAL_PLACEHOLDERS
 
-#include "ara/crypto/keys/main_key_storage_provider.h"
-#include "ara/crypto/common/entry_point.h"
+#include "keys/main_key_storage_provider.h"
+#include "common/entry_point.h"
 #include <iostream>
 #include <fstream>
 #include <boost/property_tree/json_parser.hpp>

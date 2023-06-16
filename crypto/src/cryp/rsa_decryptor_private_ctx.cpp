@@ -1,4 +1,4 @@
-#include "ara/crypto/cryp/rsa_decryptor_private_ctx.h"
+#include "cryp/rsa_decryptor_private_ctx.h"
 #include <cryptopp/osrng.h>
 
 namespace ara
@@ -54,8 +54,8 @@ namespace ara
                 CryptoPP::Integer c((CryptoPP::byte *)input.data(), input.size());
                 CryptoPP::Integer p = this->key->getKeyData().CalculateInverse(prng, c);
 
-                std::vector<CryptoPP::byte> byteArray(p.ByteCount());
-                p.Encode(byteArray.data(), byteArray.size());
+                std::vector<core::Byte> byteArray(p.ByteCount());
+                p.Encode(reinterpret_cast<CryptoPP::byte *>(byteArray.data()), byteArray.size());
 
                 // Copy the byte array to a core::Vector<core::Byte>
                 core::Vector<core::Byte> byteVector(byteArray.begin(), byteArray.end());

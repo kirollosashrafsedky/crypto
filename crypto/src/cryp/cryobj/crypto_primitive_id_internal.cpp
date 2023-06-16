@@ -1,5 +1,5 @@
-#include "ara/crypto/cryp/cryobj/crypto_primitive_id_internal.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
+#include "cryp/cryobj/crypto_primitive_id_internal.h"
+#include "cryp/algorithm_ids.h"
 
 namespace ara
 {
@@ -34,6 +34,8 @@ namespace ara
                     primitiveName = SHA3_384_PRIMITIVE_NAME;
                 else if (this->algId == SHA3_512_ALG_ID)
                     primitiveName = SHA3_512_PRIMITIVE_NAME;
+                else if (this->algId == HMAC_SHA256_ALG_ID)
+                    primitiveName = HMAC_SHA256_PRIMITIVE_NAME;
                 else
                     primitiveName = "Undefined";
             }
@@ -63,6 +65,8 @@ namespace ara
                     algId = SHA3_384_ALG_ID;
                 else if (this->primitiveName == SHA3_512_PRIMITIVE_NAME)
                     algId = SHA3_512_ALG_ID;
+                else if (this->primitiveName == HMAC_SHA256_PRIMITIVE_NAME)
+                    algId = HMAC_SHA256_ALG_ID;
                 else
                     algId = 0;
             }

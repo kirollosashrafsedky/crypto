@@ -1,7 +1,7 @@
-#include "ara/crypto/cryp/auto_random_generator_ctx.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
-#include "ara/crypto/cryp/cryobj/incremental_secret_seed.h"
-#include "ara/crypto/cryp/cryobj/aes_symmetric_key.h"
+#include "cryp/auto_random_generator_ctx.h"
+#include "cryp/algorithm_ids.h"
+#include "cryp/cryobj/incremental_secret_seed.h"
+#include "cryp/cryobj/aes_symmetric_key.h"
 
 namespace ara
 {

@@ -1,6 +1,6 @@
-#include "ara/crypto/cryp/rsa_decryptor_crypto_service.h"
-#include "ara/crypto/cryp/rsa_decryptor_private_ctx.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
+#include "cryp/rsa_decryptor_crypto_service.h"
+#include "cryp/rsa_decryptor_private_ctx.h"
+#include "cryp/algorithm_ids.h"
 
 namespace ara
 {

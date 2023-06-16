@@ -1,4 +1,4 @@
-#include "ara/crypto/cryp/auto_rng_extension_service.h"
+#include "cryp/auto_rng_extension_service.h"
 
 namespace ara
 {

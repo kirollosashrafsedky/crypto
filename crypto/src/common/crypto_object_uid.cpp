@@ -1,4 +1,4 @@
-#include "ara/crypto/common/crypto_object_uid.h"
+#include "common/crypto_object_uid.h"
 
 namespace ara
 {

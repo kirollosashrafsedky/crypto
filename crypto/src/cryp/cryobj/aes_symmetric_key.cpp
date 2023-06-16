@@ -1,7 +1,7 @@
-#include "ara/crypto/cryp/cryobj/aes_symmetric_key.h"
+#include "cryp/cryobj/aes_symmetric_key.h"
 #include <memory>
-#include "ara/crypto/cryp/algorithm_ids.h"
-#include "ara/crypto/common/io_interface_internal.h"
+#include "cryp/algorithm_ids.h"
+#include "common/io_interface_internal.h"
 
 namespace ara
 {
@@ -80,7 +80,7 @@ namespace ara
 
                 crypto::internal::IOInterfaceInternal &io = dynamic_cast<crypto::internal::IOInterfaceInternal &>(container);
 
-                core::Vector<core::Byte> keyMaterial(this->keyData.BytePtr(), this->keyData.BytePtr() + this->keyData.size());
+                core::Vector<core::Byte> keyMaterial(reinterpret_cast<const core::Byte *>(this->keyData.BytePtr()), reinterpret_cast<const core::Byte *>(this->keyData.BytePtr() + this->keyData.size()));
                 io.setKeyMaterial(keyMaterial);
                 io.setExportable(this->isExportable);
                 io.setProvider(this->cryptoProvider);

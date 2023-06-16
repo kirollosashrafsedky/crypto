@@ -6,18 +6,21 @@
 #include "testers/rng-test.h"
 #include "testers/hash-test.h"
 #include "testers/ecdsa-sign-verify-test.h"
+#include "testers/mac-test.h"
 
 int main()
 {
-    EcdsaSignVerifyTest();
-    // EcdsaPublicPrivateKeysGenerateTest();
-    // HashTest();
-    // RngTest();
-    // SecretSeedGenerateTest();
-    // PublicPrivateKeysGenerateTest();
-    // RsaEncDecTest();
-    // PublicKeyLoadTest();
-    // SymmetricBlockCipherTest();
-    // KeyStorageProvideTest();
     // cryptoKeyProvidersTest();
+    // PublicPrivateKeysGenerateTest();
+    // SecretSeedGenerateTest();
+    // // PublicKeyLoadTest();
+    // EcdsaPublicPrivateKeysGenerateTest();
+    // // V2xKeysGeneration();
+    // EcdsaSignVerifyTest();
+    // HashTest();
+    // KeyStorageProvideTest();
+    // RngTest();
+    // RsaEncDecTest();
+    // SymmetricBlockCipherTest();
+    MacTest();
 }

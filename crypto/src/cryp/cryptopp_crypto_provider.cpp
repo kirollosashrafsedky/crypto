@@ -1,17 +1,18 @@
 
-#include "ara/crypto/cryp/cryptopp_crypto_provider.h"
-#include "ara/crypto/common/mem_trusted_container.h"
-#include "ara/crypto/cryp/cryobj/crypto_primitive_id_internal.h"
-#include "ara/crypto/cryp/cryobj/incremental_secret_seed.h"
-#include "ara/crypto/cryp/aes_symmetric_block_cipher_ctx.h"
-#include "ara/crypto/cryp/rsa_encryptor_public_ctx.h"
-#include "ara/crypto/cryp/rsa_decryptor_private_ctx.h"
-#include "ara/crypto/cryp/auto_random_generator_ctx.h"
-#include "ara/crypto/cryp/sha_hash_function_ctx.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
-#include "ara/crypto/common/io_interface_internal.h"
-#include "ara/crypto/cryp/ecdsa_signer_private_ctx.h"
-#include "ara/crypto/cryp/ecdsa_verifier_public_ctx.h"
+#include "cryp/cryptopp_crypto_provider.h"
+#include "common/mem_trusted_container.h"
+#include "cryp/cryobj/crypto_primitive_id_internal.h"
+#include "cryp/cryobj/incremental_secret_seed.h"
+#include "cryp/aes_symmetric_block_cipher_ctx.h"
+#include "cryp/rsa_encryptor_public_ctx.h"
+#include "cryp/rsa_decryptor_private_ctx.h"
+#include "cryp/auto_random_generator_ctx.h"
+#include "cryp/sha_hash_function_ctx.h"
+#include "cryp/algorithm_ids.h"
+#include "common/io_interface_internal.h"
+#include "cryp/ecdsa_signer_private_ctx.h"
+#include "cryp/ecdsa_verifier_public_ctx.h"
+#include "cryp/hmac_message_authn_code_ctx.h"
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/osrng.h>
@@ -132,6 +133,15 @@ namespace ara
 
             core::Result<MessageAuthnCodeCtx::Sptr> CryptoppCryptoProvider::CreateMessageAuthnCodeCtx(AlgId algId) noexcept
             {
+                MessageAuthnCodeCtx::Sptr ptr;
+                if (algId == HMAC_SHA256_ALG_ID)
+                {
+                    ptr = std::make_shared<HmacMessageAuthnCodeCtx>(CryptoppCryptoProvider::getInstance(), algId);
+                }
+                if (ptr)
+                    return core::Result<MessageAuthnCodeCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<MessageAuthnCodeCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<MsgRecoveryPublicCtx::Sptr> CryptoppCryptoProvider::CreateMsgRecoveryPublicCtx(AlgId algId) noexcept
@@ -256,7 +266,7 @@ namespace ara
                 else
                 {
                     CryptoPP::InvertibleRSAFunction rsaParams;
-                    rsaParams.GenerateRandomWithKeySize(prng, keySize);
+                    rsaParams.GenerateRandomWithKeySize(prng, keySize * 8);
 
                     CryptoPP::RSA::PrivateKey privateKey(rsaParams);
                     key = std::make_shared<RsaPrivateKey>(CryptoppCryptoProvider::getInstance(), keyCouid, algId, privateKey, allowedUsage, isSession, isExportable);
@@ -281,7 +291,7 @@ namespace ara
 
                     CryptoPP::SecByteBlock keyData(INCREMENTAL_SEED_PAYLOAD_SIZE);
                     prng.GenerateBlock(keyData, keyData.size());
-                    core::Vector<core::Byte> keyDataVec(keyData.begin(), keyData.end());
+                    core::Vector<core::Byte> keyDataVec(reinterpret_cast<const core::Byte *>(keyData.begin()), reinterpret_cast<const core::Byte *>(keyData.end()));
                     key = std::make_shared<IncrementalSecretSeed>(CryptoppCryptoProvider::getInstance(), keyCouid, keyDataVec, allowedUsage, isSession, isExportable);
                 }
                 if (key)

@@ -1,9 +1,9 @@
-#include "ara/crypto/cryp/ecdsa_signer_private_ctx.h"
-#include "ara/crypto/cryp/ecdsa_signer_private_signature_service.h"
-#include "ara/crypto/cryp/cryobj/ecdsa_private_key.h"
-#include "ara/crypto/cryp/cryobj/ecdsa_signature.h"
-#include "ara/crypto/cryp/sha_hash_function_ctx.h"
-#include "ara/crypto/cryp/algorithm_ids.h"
+#include "cryp/ecdsa_signer_private_ctx.h"
+#include "cryp/ecdsa_signer_private_signature_service.h"
+#include "cryp/cryobj/ecdsa_private_key.h"
+#include "cryp/cryobj/ecdsa_signature.h"
+#include "cryp/sha_hash_function_ctx.h"
+#include "cryp/algorithm_ids.h"
 #include <cryptopp/osrng.h>
 
 namespace ara
