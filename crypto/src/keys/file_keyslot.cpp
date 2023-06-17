@@ -1,10 +1,10 @@
 #define BOOST_BIND_GLOBAL_PLACEHOLDERS
 
-#include "keys/file_keyslot.h"
-#include "common/crypto_error_domain.h"
-#include "cryp/cryptopp_crypto_provider.h"
-#include "common/entry_point.h"
-#include "keys/main_key_storage_provider.h"
+#include "crypto/keys/file_keyslot.h"
+#include "crypto/common/crypto_error_domain.h"
+#include "crypto/cryp/cryptopp_crypto_provider.h"
+#include "crypto/common/entry_point.h"
+#include "crypto/keys/main_key_storage_provider.h"
 #include <iostream>
 #include <fstream>
 #include <boost/property_tree/json_parser.hpp>

@@ -1,18 +1,21 @@
 
-#include "cryp/cryptopp_crypto_provider.h"
-#include "common/mem_trusted_container.h"
-#include "cryp/cryobj/crypto_primitive_id_internal.h"
-#include "cryp/cryobj/incremental_secret_seed.h"
-#include "cryp/aes_symmetric_block_cipher_ctx.h"
-#include "cryp/rsa_encryptor_public_ctx.h"
-#include "cryp/rsa_decryptor_private_ctx.h"
-#include "cryp/auto_random_generator_ctx.h"
-#include "cryp/sha_hash_function_ctx.h"
-#include "cryp/algorithm_ids.h"
-#include "common/io_interface_internal.h"
-#include "cryp/ecdsa_signer_private_ctx.h"
-#include "cryp/ecdsa_verifier_public_ctx.h"
-#include "cryp/hmac_message_authn_code_ctx.h"
+#include "crypto/cryp/cryptopp_crypto_provider.h"
+#include "crypto/common/mem_trusted_container.h"
+#include "crypto/cryp/cryobj/crypto_primitive_id_internal.h"
+#include "crypto/cryp/cryobj/incremental_secret_seed.h"
+#include "crypto/cryp/aes_symmetric_block_cipher_ctx.h"
+#include "crypto/cryp/rsa_encryptor_public_ctx.h"
+#include "crypto/cryp/rsa_decryptor_private_ctx.h"
+#include "crypto/cryp/auto_random_generator_ctx.h"
+#include "crypto/cryp/sha_hash_function_ctx.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/common/io_interface_internal.h"
+#include "crypto/cryp/ecdsa_signer_private_ctx.h"
+#include "crypto/cryp/ecdsa_verifier_public_ctx.h"
+#include "crypto/cryp/hmac_message_authn_code_ctx.h"
+#include "crypto/cryp/aes_hmac_aead_auth_cipher_ctx.h"
+#include "crypto/cryp/ecdsa_sig_encode_private_ctx.h"
+#include "crypto/cryp/ecdsa_msg_recovery_public_ctx.h"
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/osrng.h>
@@ -70,6 +73,15 @@ namespace ara
 
             core::Result<AuthCipherCtx::Sptr> CryptoppCryptoProvider::CreateAuthCipherCtx(AlgId algId) noexcept
             {
+                AuthCipherCtx::Sptr ptr;
+                if (algId == AES_HMAC_AEAD_ALG_ID)
+                {
+                    ptr = std::make_shared<AesHmacAeadAuthCipherCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<AuthCipherCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<AuthCipherCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<DecryptorPrivateCtx::Sptr> CryptoppCryptoProvider::CreateDecryptorPrivateCtx(AlgId algId) noexcept
@@ -136,7 +148,7 @@ namespace ara
                 MessageAuthnCodeCtx::Sptr ptr;
                 if (algId == HMAC_SHA256_ALG_ID)
                 {
-                    ptr = std::make_shared<HmacMessageAuthnCodeCtx>(CryptoppCryptoProvider::getInstance(), algId);
+                    ptr = std::make_shared<HmacMessageAuthnCodeCtx>(CryptoppCryptoProvider::getInstance());
                 }
                 if (ptr)
                     return core::Result<MessageAuthnCodeCtx::Sptr>::FromValue(ptr);
@@ -146,6 +158,15 @@ namespace ara
 
             core::Result<MsgRecoveryPublicCtx::Sptr> CryptoppCryptoProvider::CreateMsgRecoveryPublicCtx(AlgId algId) noexcept
             {
+                MsgRecoveryPublicCtx::Sptr ptr;
+                if (algId == ECDSA_SHA3_256_ALG_ID)
+                {
+                    ptr = std::make_shared<ECDSAMsgRecoveryPublicCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<MsgRecoveryPublicCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<MsgRecoveryPublicCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<RandomGeneratorCtx::Sptr> CryptoppCryptoProvider::CreateRandomGeneratorCtx(AlgId algId, bool initialize) noexcept
@@ -166,6 +187,15 @@ namespace ara
 
             core::Result<SigEncodePrivateCtx::Sptr> CryptoppCryptoProvider::CreateSigEncodePrivateCtx(AlgId algId) noexcept
             {
+                SigEncodePrivateCtx::Sptr ptr;
+                if (algId == ECDSA_SHA3_256_ALG_ID)
+                {
+                    ptr = std::make_shared<ECDSASigEncodePrivateCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<SigEncodePrivateCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<SigEncodePrivateCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<Signature::Sptrc> CryptoppCryptoProvider::CreateSignature(AlgId signAlgId, ReadOnlyMemRegion value, const RestrictedUseObject &key, AlgId hashAlgId) noexcept

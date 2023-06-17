@@ -1,5 +1,5 @@
-#include "common/mem_io_interface.h"
-#include "common/mem_trusted_container.h"
+#include "crypto/common/mem_io_interface.h"
+#include "crypto/common/mem_trusted_container.h"
 
 namespace ara
 {

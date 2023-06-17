@@ -1,4 +1,4 @@
-#include "cryp/rsa_decryptor_private_ctx.h"
+#include "crypto/cryp/rsa_decryptor_private_ctx.h"
 #include <cryptopp/osrng.h>
 
 namespace ara

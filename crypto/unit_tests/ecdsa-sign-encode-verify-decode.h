@@ -1,0 +1,6 @@
+#ifndef _ECDSA_SIGN_ENCODE_VERIFY_DECODE_TEST_H_
+#define _ECDSA_SIGN_ENCODE_VERIFY_DECODE_TEST_H_
+
+void EcdsaSignEncodeVerifyDecodeTest();
+
+#endif /*_ECDSA_SIGN_ENCODE_VERIFY_DECODE_TEST_H_ */

@@ -1,5 +1,5 @@
-#include "cryp/hmac_digest_service.h"
-#include "cryp/hmac_message_authn_code_ctx.h"
+#include "crypto/cryp/hmac_digest_service.h"
+#include "crypto/cryp/hmac_message_authn_code_ctx.h"
 
 namespace ara
 {

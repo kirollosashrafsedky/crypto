@@ -1,5 +1,5 @@
-#include "cryp/ecdsa_verifier_public_signature_service.h"
-#include "cryp/verifier_public_ctx.h"
+#include "crypto/cryp/ecdsa_verifier_public_signature_service.h"
+#include "crypto/cryp/verifier_public_ctx.h"
 
 namespace ara
 {

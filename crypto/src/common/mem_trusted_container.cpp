@@ -1,5 +1,5 @@
-#include "common/mem_trusted_container.h"
-#include "cryp/crypto_provider.h"
+#include "crypto/common/mem_trusted_container.h"
+#include "crypto/cryp/crypto_provider.h"
 
 namespace ara
 {

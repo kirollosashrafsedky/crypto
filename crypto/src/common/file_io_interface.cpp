@@ -1,5 +1,5 @@
-#include "common/file_io_interface.h"
-#include "keys/file_keyslot.h"
+#include "crypto/common/file_io_interface.h"
+#include "crypto/keys/file_keyslot.h"
 
 namespace ara
 {
