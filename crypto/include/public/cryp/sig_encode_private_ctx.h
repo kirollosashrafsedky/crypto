@@ -26,7 +26,9 @@ namespace ara
                 virtual core::Result<core::Vector<core::Byte>> SignAndEncode(ReadOnlyMemRegion in) const noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> SignAndEncode(ReadOnlyMemRegion in) const noexcept;
+                core::Result<ByteVector<Alloc>> SignAndEncode(ReadOnlyMemRegion in) const noexcept
+                {
+                }
 
                 virtual core::Result<void> Reset() noexcept = 0;
 

@@ -28,7 +28,9 @@ namespace ara
                 virtual core::Result<core::Vector<core::Byte>> GetDigest(std::size_t offset = 0) const noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> GetDigest(std::size_t offset = 0) const noexcept;
+                core::Result<ByteVector<Alloc>> GetDigest(std::size_t offset = 0) const noexcept
+                {
+                }
 
                 virtual core::Result<void> Reset() noexcept = 0;
 

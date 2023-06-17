@@ -32,7 +32,9 @@ namespace ara
                 virtual core::Result<core::Vector<core::Byte>> FinishBytes(ReadOnlyMemRegion in) noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> FinishBytes(ReadOnlyMemRegion in) noexcept;
+                core::Result<ByteVector<Alloc>> FinishBytes(ReadOnlyMemRegion in) noexcept
+                {
+                }
 
                 virtual BlockService::Sptr GetBlockService() const noexcept = 0;
 
@@ -49,7 +51,9 @@ namespace ara
                 virtual core::Result<core::Vector<core::Byte>> ProcessBytes(ReadOnlyMemRegion in) noexcept = 0;
 
                 template <typename Alloc = std::allocator<std::uint8_t>>
-                core::Result<ByteVector<Alloc>> ProcessBytes(ReadOnlyMemRegion in) noexcept;
+                core::Result<ByteVector<Alloc>> ProcessBytes(ReadOnlyMemRegion in) noexcept
+                {
+                }
 
                 virtual core::Result<void> Reset() noexcept = 0;
 

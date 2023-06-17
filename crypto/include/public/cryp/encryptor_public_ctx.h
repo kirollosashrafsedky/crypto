@@ -29,7 +29,7 @@ namespace ara
                 template <typename Alloc = std::allocator<std::uint8_t>>
                 core::Result<ByteVector<Alloc>> ProcessBlock(ReadOnlyMemRegion in, bool suppressPadding = false) const noexcept
                 {
-                                }
+                }
 
                 virtual core::Result<void> Reset() noexcept = 0;
 

@@ -33,7 +33,9 @@ namespace ara
                 virtual core::Result<void> SetKey(const SymmetricKey &key, CryptoTransform transform) noexcept = 0;
 
                 template <typename ExpectedKey>
-                core::Result<typename ExpectedKey::Sptrc> UnwrapConcreteKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) noexcept;
+                core::Result<typename ExpectedKey::Sptrc> UnwrapConcreteKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) noexcept
+                {
+                }
 
                 virtual core::Result<RestrictedUseObject::Sptrc> UnwrapKey(ReadOnlyMemRegion wrappedKey, AlgId algId, AllowedUsageFlags allowedUsage) const noexcept = 0;
 

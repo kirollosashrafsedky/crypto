@@ -8,6 +8,7 @@
 #include "testers/ecdsa-sign-verify-test.h"
 #include "testers/mac-test.h"
 #include "testers/authenticated-encryption.h"
+#include "testers/ecdsa-sign-encode-verify-decode.h"
 
 int main()
 {
@@ -24,5 +25,6 @@ int main()
     // RsaEncDecTest();
     // SymmetricBlockCipherTest();
     // MacTest();
-    authEncTest();
+    // authEncTest();
+    EcdsaSignEncodeVerifyDecodeTest();
 }
