@@ -13,6 +13,7 @@
 #include "cryp/ecdsa_signer_private_ctx.h"
 #include "cryp/ecdsa_verifier_public_ctx.h"
 #include "cryp/hmac_message_authn_code_ctx.h"
+#include "cryp/aes_hmac_aead_auth_cipher_ctx.h"
 
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/osrng.h>
@@ -70,6 +71,15 @@ namespace ara
 
             core::Result<AuthCipherCtx::Sptr> CryptoppCryptoProvider::CreateAuthCipherCtx(AlgId algId) noexcept
             {
+                AuthCipherCtx::Sptr ptr;
+                if (algId == AES_HMAC_AEAD_ALG_ID)
+                {
+                    ptr = std::make_shared<AesHmacAeadAuthCipherCtx>(CryptoppCryptoProvider::getInstance());
+                }
+                if (ptr)
+                    return core::Result<AuthCipherCtx::Sptr>::FromValue(ptr);
+
+                return core::Result<AuthCipherCtx::Sptr>::FromError(CryptoErrc::kUnknownIdentifier);
             }
 
             core::Result<DecryptorPrivateCtx::Sptr> CryptoppCryptoProvider::CreateDecryptorPrivateCtx(AlgId algId) noexcept
@@ -136,7 +146,7 @@ namespace ara
                 MessageAuthnCodeCtx::Sptr ptr;
                 if (algId == HMAC_SHA256_ALG_ID)
                 {
-                    ptr = std::make_shared<HmacMessageAuthnCodeCtx>(CryptoppCryptoProvider::getInstance(), algId);
+                    ptr = std::make_shared<HmacMessageAuthnCodeCtx>(CryptoppCryptoProvider::getInstance());
                 }
                 if (ptr)
                     return core::Result<MessageAuthnCodeCtx::Sptr>::FromValue(ptr);

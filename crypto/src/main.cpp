@@ -7,6 +7,7 @@
 #include "testers/hash-test.h"
 #include "testers/ecdsa-sign-verify-test.h"
 #include "testers/mac-test.h"
+#include "testers/authenticated-encryption.h"
 
 int main()
 {
@@ -22,5 +23,6 @@ int main()
     // RngTest();
     // RsaEncDecTest();
     // SymmetricBlockCipherTest();
-    MacTest();
+    // MacTest();
+    authEncTest();
 }

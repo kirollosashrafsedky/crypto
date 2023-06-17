@@ -11,9 +11,9 @@ namespace ara
         {
             using namespace internal;
 
-            HmacMessageAuthnCodeCtx::HmacMessageAuthnCodeCtx(std::shared_ptr<const CryptoProvider> cryptoProvider, CryptoAlgId algId)
+            HmacMessageAuthnCodeCtx::HmacMessageAuthnCodeCtx(std::shared_ptr<const CryptoProvider> cryptoProvider)
                 : cryptoProvider(cryptoProvider), hmacDigestService(std::make_shared<HmacDigestService>(*this)),
-                  primitiveId(std::make_shared<CryptoPrimitiveIdInternal>(algId)), algId(algId), hashStarted(false),
+                  primitiveId(std::make_shared<CryptoPrimitiveIdInternal>(HMAC_SHA256_ALG_ID)), hashStarted(false),
                   hashUpdated(false), isSetKeyCalled(false)
             {
             }

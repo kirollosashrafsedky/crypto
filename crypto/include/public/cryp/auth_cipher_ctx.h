@@ -22,7 +22,7 @@ namespace ara
             public:
                 using Sptr = std::shared_ptr<AuthCipherCtx>;
 
-                virtual core::Result<bool> Check(const Signature &expected) const noexcept = 0;
+                virtual core::Result<bool> Check(const core::Vector<core::Byte> &expected) const noexcept = 0;
 
                 virtual DigestService::Sptr GetDigestService() const noexcept = 0;
 

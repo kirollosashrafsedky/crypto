@@ -22,7 +22,7 @@ namespace ara
                 public:
                     using Sptr = std::shared_ptr<HmacMessageAuthnCodeCtx>;
 
-                    HmacMessageAuthnCodeCtx(std::shared_ptr<const CryptoProvider> cryptoProvider, CryptoAlgId algId);
+                    HmacMessageAuthnCodeCtx(std::shared_ptr<const CryptoProvider> cryptoProvider);
 
                     CryptoPrimitiveId::Sptrc GetCryptoPrimitiveId() const noexcept override;
 
@@ -63,8 +63,6 @@ namespace ara
                     std::shared_ptr<HmacDigestService> hmacDigestService;
 
                     std::shared_ptr<const CryptoPrimitiveIdInternal> primitiveId;
-
-                    CryptoAlgId algId;
 
                     std::shared_ptr<CryptoPP::HMAC<CryptoPP::SHA256>> hmac;
 
