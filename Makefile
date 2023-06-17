@@ -6,7 +6,7 @@ LDLIBS = -lcryptopp
 DEPFLAGS = -MMD -MT $@
 
 # Define the directories
-SRCDIR := crypto/src
+SRCDIR := crypto
 OBJDIR := objects
 
 # Define the sources, objects, and dependencies

@@ -1,14 +1,14 @@
 #include <iostream>
-#include "testers/symmetric-block-cipher-test.h"
-#include "testers/key-storage-provider-test.h"
-#include "testers/crypto-key-providers-test.h"
-#include "testers/rsa-enc-dec-test.h"
-#include "testers/rng-test.h"
-#include "testers/hash-test.h"
-#include "testers/ecdsa-sign-verify-test.h"
-#include "testers/mac-test.h"
-#include "testers/authenticated-encryption.h"
-#include "testers/ecdsa-sign-encode-verify-decode.h"
+#include "symmetric-block-cipher-test.h"
+#include "key-storage-provider-test.h"
+#include "crypto-key-providers-test.h"
+#include "rsa-enc-dec-test.h"
+#include "rng-test.h"
+#include "hash-test.h"
+#include "ecdsa-sign-verify-test.h"
+#include "mac-test.h"
+#include "authenticated-encryption.h"
+#include "ecdsa-sign-encode-verify-decode.h"
 
 int main()
 {
