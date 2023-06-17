@@ -1,5 +1,5 @@
-#include "cryp/cryobj/crypto_primitive_id_internal.h"
-#include "cryp/algorithm_ids.h"
+#include "crypto/cryp/cryobj/crypto_primitive_id_internal.h"
+#include "crypto/cryp/algorithm_ids.h"
 
 namespace ara
 {

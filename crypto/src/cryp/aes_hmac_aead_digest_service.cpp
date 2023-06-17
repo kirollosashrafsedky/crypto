@@ -1,5 +1,5 @@
-#include "cryp/aes_hmac_aead_digest_service.h"
-#include "cryp/aes_hmac_aead_auth_cipher_ctx.h"
+#include "crypto/cryp/aes_hmac_aead_digest_service.h"
+#include "crypto/cryp/aes_hmac_aead_auth_cipher_ctx.h"
 
 namespace ara
 {

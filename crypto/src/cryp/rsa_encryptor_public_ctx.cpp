@@ -1,4 +1,4 @@
-#include "cryp/rsa_encryptor_public_ctx.h"
+#include "crypto/cryp/rsa_encryptor_public_ctx.h"
 
 namespace ara
 {

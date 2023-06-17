@@ -1,11 +1,12 @@
 #define BOOST_BIND_GLOBAL_PLACEHOLDERS
 
-#include "keys/main_key_storage_provider.h"
-#include "common/entry_point.h"
+#include "crypto/keys/main_key_storage_provider.h"
+#include "crypto/common/entry_point.h"
 #include <iostream>
 #include <fstream>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+// #include "IAM.h"
 
 namespace ara
 {
@@ -97,7 +98,14 @@ namespace ara
 
             core::Result<KeySlot::Sptr> MainKeyStorageProvider::LoadKeySlot(core::InstanceSpecifier &iSpecify) noexcept
             {
-                // call IAM, if false: return error unauthorizedAccess, if true
+                core::StringView iSpecifyStrView = iSpecify.ToString();
+                std::string iSpecifyStr(iSpecifyStrView.begin(), iSpecifyStrView.end());
+                // IAM iam;
+                // bool hasAccess = iam.check_access(iSpecifyStr, "read");
+                // if (!hasAccess)
+                // {
+                // return core::Result<KeySlot::Sptr>::FromError(CryptoErrc::kAccessViolation);
+                // }
                 std::ifstream file(this->manifestFileName);
                 if (!file.is_open())
                 {
@@ -125,11 +133,10 @@ namespace ara
                 for (const auto &slot : keySlotsArray)
                 {
                     std::string instanceSpecifier = slot.second.get<std::string>("InstanceSpecifier");
-                    core::StringView iSpecifyStr = iSpecify.ToString();
-                    if (instanceSpecifier == std::string(iSpecifyStr.begin(), iSpecifyStr.end()))
+                    if (instanceSpecifier == iSpecifyStr)
                     {
                         std::string cryptoProviderStr = slot.second.get<std::string>("CryptoProvider");
-                        std::string keyMaterialPath = slot.second.get<std::string>("KeyMaterialPath");
+                        std::string keyMaterialPath = pathPrefix + slot.second.get<std::string>("KeyMaterialPath");
                         CryptoAlgId algId = slot.second.get<CryptoAlgId>("AlgId");
                         std::string allowedUsageFlagsStr = slot.second.get<std::string>("AllowedUsageFlags");
                         AllowedUsageFlags allowedUsageFlags = std::stoul(allowedUsageFlagsStr, nullptr, 16);

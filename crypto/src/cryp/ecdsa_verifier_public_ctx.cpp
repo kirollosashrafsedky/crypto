@@ -1,7 +1,7 @@
-#include "cryp/ecdsa_verifier_public_ctx.h"
-#include "cryp/cryobj/ecdsa_signature.h"
-#include "cryp/sha_hash_function_ctx.h"
-#include "cryp/algorithm_ids.h"
+#include "crypto/cryp/ecdsa_verifier_public_ctx.h"
+#include "crypto/cryp/cryobj/ecdsa_signature.h"
+#include "crypto/cryp/sha_hash_function_ctx.h"
+#include "crypto/cryp/algorithm_ids.h"
 
 namespace ara
 {

@@ -1,4 +1,4 @@
-#include "common/uuid.h"
+#include "crypto/common/uuid.h"
 
 namespace ara
 {

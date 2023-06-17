@@ -1,8 +1,8 @@
-#include "cryp/cryobj/ecdsa_private_key.h"
-#include "cryp/algorithm_ids.h"
-#include "common/io_interface_internal.h"
-#include "common/mem_io_interface.h"
-#include "cryp/cryobj/ecdsa_public_key.h"
+#include "crypto/cryp/cryobj/ecdsa_private_key.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/common/io_interface_internal.h"
+#include "crypto/common/mem_io_interface.h"
+#include "crypto/cryp/cryobj/ecdsa_public_key.h"
 
 namespace ara
 {

@@ -1,7 +1,7 @@
-#include "cryp/aes_hmac_aead_auth_cipher_ctx.h"
-#include "cryp/algorithm_ids.h"
-#include "cryp/cryptopp_crypto_provider.h"
-#include "common/mem_trusted_container.h"
+#include "crypto/cryp/aes_hmac_aead_auth_cipher_ctx.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/cryp/cryptopp_crypto_provider.h"
+#include "crypto/common/mem_trusted_container.h"
 #include "cryptopp/authenc.h"
 #include "cryptopp/filters.h"
 

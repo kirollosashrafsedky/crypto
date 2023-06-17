@@ -1,7 +1,7 @@
-#include "cryp/cryobj/aes_symmetric_key.h"
+#include "crypto/cryp/cryobj/aes_symmetric_key.h"
 #include <memory>
-#include "cryp/algorithm_ids.h"
-#include "common/io_interface_internal.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/common/io_interface_internal.h"
 
 namespace ara
 {

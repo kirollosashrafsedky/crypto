@@ -1,6 +1,6 @@
-#include "cryp/aes_crypto_service.h"
+#include "crypto/cryp/aes_crypto_service.h"
 #include <cryptopp/aes.h>
-#include "cryp/aes_symmetric_block_cipher_ctx.h"
+#include "crypto/cryp/aes_symmetric_block_cipher_ctx.h"
 
 namespace ara
 {

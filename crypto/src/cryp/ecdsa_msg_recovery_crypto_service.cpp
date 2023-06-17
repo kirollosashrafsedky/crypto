@@ -1,5 +1,5 @@
-#include "cryp/ecdsa_msg_recovery_crypto_service.h"
-// #include "cryp/ecdsa_msg_recovery_public_ctx.h"
+#include "crypto/cryp/ecdsa_msg_recovery_crypto_service.h"
+// #include "crypto/cryp/ecdsa_msg_recovery_public_ctx.h"
 
 namespace ara
 {

@@ -1,6 +1,6 @@
-#include "cryp/cryobj/incremental_secret_seed.h"
-#include "cryp/algorithm_ids.h"
-#include "common/io_interface_internal.h"
+#include "crypto/cryp/cryobj/incremental_secret_seed.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/common/io_interface_internal.h"
 
 namespace ara
 {

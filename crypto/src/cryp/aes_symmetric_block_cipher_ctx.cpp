@@ -1,5 +1,5 @@
-#include "cryp/aes_symmetric_block_cipher_ctx.h"
-#include "common/crypto_error_domain.h"
+#include "crypto/cryp/aes_symmetric_block_cipher_ctx.h"
+#include "crypto/common/crypto_error_domain.h"
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/rijndael.h>
 #include <cryptopp/modes.h>

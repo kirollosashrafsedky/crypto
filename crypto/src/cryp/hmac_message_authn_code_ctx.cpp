@@ -1,7 +1,7 @@
-#include "cryp/hmac_message_authn_code_ctx.h"
-#include "cryp/algorithm_ids.h"
-#include "cryp/cryptopp_crypto_provider.h"
-#include "common/mem_trusted_container.h"
+#include "crypto/cryp/hmac_message_authn_code_ctx.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/cryp/cryptopp_crypto_provider.h"
+#include "crypto/common/mem_trusted_container.h"
 
 namespace ara
 {

@@ -1,5 +1,5 @@
-#include "common/entry_point.h"
-#include "cryp/algorithm_ids.h"
+#include "crypto/common/entry_point.h"
+#include "crypto/cryp/algorithm_ids.h"
 
 using namespace ara;
 using namespace ara::core;

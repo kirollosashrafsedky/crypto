@@ -1,5 +1,5 @@
-#include "common/entry_point.h"
-#include "keys/main_key_storage_provider.h"
+#include "crypto/common/entry_point.h"
+#include "crypto/keys/main_key_storage_provider.h"
 
 using namespace ara;
 using namespace ara::core;

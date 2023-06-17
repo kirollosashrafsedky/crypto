@@ -1,5 +1,5 @@
-#include "cryp/ecdsa_sig_encode_crypto_service.h"
-// #include "cryp/ecdsa_sig_encode_private_ctx.h"
+#include "crypto/cryp/ecdsa_sig_encode_crypto_service.h"
+// #include "crypto/cryp/ecdsa_sig_encode_private_ctx.h"
 
 namespace ara
 {

@@ -1,6 +1,6 @@
-#include "cryp/ecdsa_sig_encode_private_ctx.h"
-#include "cryp/algorithm_ids.h"
-#include "cryp/cryptopp_crypto_provider.h"
+#include "crypto/cryp/ecdsa_sig_encode_private_ctx.h"
+#include "crypto/cryp/algorithm_ids.h"
+#include "crypto/cryp/cryptopp_crypto_provider.h"
 
 namespace ara
 {
